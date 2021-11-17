@@ -1,4 +1,4 @@
-package modelDAO.Impl;
+package modelDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,19 +7,17 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import HibernateUtils.HibernateUtil;
-import Objects.Topic;
+import Objects.Competition;
 
-public class TopicDao {
+public class CompetitionDao {
 
-	public Topic getTopicById(long id) {
+	public Competition getCompetitionById(long id) {
 		Transaction transaction = null;
-		Topic topic = null;
+		Competition competition = null;
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
-
-			topic = session.get(Topic.class, id);
-
+			competition = session.get(Competition.class, id);
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
@@ -27,18 +25,18 @@ public class TopicDao {
 			}
 		}
 
-		return topic;
+		return competition;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Topic> getAllTopics() {
+	public List<Competition> getAllCompetitions() {
 		Transaction transaction = null;
-		List<Topic> topics = new ArrayList<Topic>();
+		List<Competition> competitions = new ArrayList<Competition>();
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			topics = session.createQuery("from topic").list();
+			competitions = session.createQuery("from competition").list();
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -47,16 +45,16 @@ public class TopicDao {
 			}
 		}
 
-		return topics;
+		return competitions;
 	}
 
-	public void saveTopic(Topic topic) {
+	public void saveCompetition(Competition competition) {
 		Transaction transaction = null;
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			session.save(topic);
+			session.save(competition);
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -66,30 +64,13 @@ public class TopicDao {
 		}
 	}
 
-	public void updateTopic(Topic topic) {
+	public void updateCompetition(Competition competition) {
 		Transaction transaction = null;
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			session.saveOrUpdate(topic);
-
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-		}
-
-	}
-
-	public void deleteTopic(Topic topic) {
-		Transaction transaction = null;
-
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-			transaction = session.beginTransaction();
-
-			session.delete(topic);
+			session.saveOrUpdate(competition);
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -100,8 +81,21 @@ public class TopicDao {
 
 	}
 
-	public Topic getByTopicName(String topicName) {
-		return null;
+	public void deleteCompetition(Competition competition) {
+		Transaction transaction = null;
+
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+			transaction = session.beginTransaction();
+
+			session.delete(competition);
+
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		}
+
 	}
 
 }

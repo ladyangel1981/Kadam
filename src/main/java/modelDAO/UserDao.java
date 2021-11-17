@@ -1,4 +1,4 @@
-package modelDAO.Impl;
+package modelDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +37,12 @@ public class UserDao {
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			user = (User) session.createQuery("from user where username =" + name);
+			user = (User) session.createQuery("from User where username =" + name);
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
-				transaction.rollback();
+				//transaction.rollback();
+				System.out.println(e);
 			}
 		}
 
@@ -56,7 +57,7 @@ public class UserDao {
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			users = session.createQuery("from user").list();
+			users = session.createQuery("from User").list();
 
 			transaction.commit();
 		} catch (Exception e) {

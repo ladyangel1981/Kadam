@@ -25,7 +25,7 @@ import javax.swing.border.EmptyBorder;
 import Exception.ErrorControl;
 import Objects.User;
 import XMLconfig.ReadXMLDomParser;
-import modelDAO.Impl.UserDao;
+import modelDAO.UserDao;
 
 
 @SuppressWarnings("serial")
@@ -125,9 +125,10 @@ public class Login extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				UserDao userDao = new UserDao();
+				String name = textField.getText();
 				
 				/*
-				User getUser = userDao.getName(textField.getText());
+				User getUser = userDao.getUserByName(name);
 				if (getUser != null) {
 					if (getUser.getPassword().equals(String.valueOf(passwordField.getPassword()))) {
 						KadammManagement kadammManagemente = new KadammManagement();
@@ -139,17 +140,23 @@ public class Login extends JFrame {
 				*/
 				
 				List<User> users = userDao.getAllUsers();
+				//System.out.println(users.size());
+				int contador =0;
 				for (User element : users) {
-					System.out.println(element);
-					if (element.getUsername().equals(textField.getText())) {
+					contador++;
+					//System.out.println(element.getUsername());
+					if (name.compareTo(element.getUsername())==0) {
 						if (element.getPassword().equals(String.valueOf(passwordField.getPassword()))) {
 							KadammManagement kadammManagemente = new KadammManagement();
 							kadammManagemente.main(null);
+							break;
 						} else {
 							new ErrorControl("Password incorrect", "Warning");
+							break;
 						}
-					} else {
-						new ErrorControl("Not found user!", "Error");
+					}
+					if (contador == users.size()){
+						new ErrorControl("No user found!", "Error");
 					}
 				}
 				

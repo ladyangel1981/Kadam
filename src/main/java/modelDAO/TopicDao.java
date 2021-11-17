@@ -1,4 +1,4 @@
-package modelDAO.Impl;
+package modelDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,18 +7,18 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import HibernateUtils.HibernateUtil;
-import Objects.Question;
+import Objects.Topic;
 
-public class QuestionDao {
+public class TopicDao {
 
-	public Question getQuestionById(long id) {
+	public Topic getTopicById(long id) {
 		Transaction transaction = null;
-		Question question = null;
+		Topic topic = null;
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			question = session.get(Question.class, id);
+			topic = session.get(Topic.class, id);
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -27,18 +27,18 @@ public class QuestionDao {
 			}
 		}
 
-		return question;
+		return topic;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Question> getAllQuestions() {
+	public List<Topic> getAllTopics() {
 		Transaction transaction = null;
-		List<Question> questions = new ArrayList<Question>();
+		List<Topic> topics = new ArrayList<Topic>();
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			questions = session.createQuery("from question").list();
+			topics = session.createQuery("from topic").list();
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -47,16 +47,32 @@ public class QuestionDao {
 			}
 		}
 
-		return questions;
+		return topics;
 	}
 
-	public void saveQuestion(Question question) {
+	public void saveTopic(Topic topic) {
 		Transaction transaction = null;
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			session.save(question);
+			session.save(topic);
+
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		}
+	}
+
+	public void updateTopic(Topic topic) {
+		Transaction transaction = null;
+
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+			transaction = session.beginTransaction();
+
+			session.saveOrUpdate(topic);
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -67,13 +83,13 @@ public class QuestionDao {
 
 	}
 
-	public void updateQuestion(Question question) {
+	public void deleteTopic(Topic topic) {
 		Transaction transaction = null;
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			session.saveOrUpdate(question);
+			session.delete(topic);
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -84,21 +100,8 @@ public class QuestionDao {
 
 	}
 
-	public void deleteQuestion(Question question) {
-		Transaction transaction = null;
-
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-			transaction = session.beginTransaction();
-
-			session.delete(question);
-
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-		}
-
+	public Topic getByTopicName(String topicName) {
+		return null;
 	}
 
 }

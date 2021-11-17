@@ -1,4 +1,4 @@
-package modelDAO.Impl;
+package modelDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,18 +7,18 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import HibernateUtils.HibernateUtil;
-import Objects.UserAnswerHistory;
+import Objects.Question;
 
-public class UserQuestionHistoryDao {
+public class QuestionDao {
 
-	public UserAnswerHistory getAnswerHistoryById(long id) {
+	public Question getQuestionById(long id) {
 		Transaction transaction = null;
-		UserAnswerHistory userQuestionHistory = null;
+		Question question = null;
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			userQuestionHistory = session.get(UserAnswerHistory.class, id);
+			question = session.get(Question.class, id);
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -27,18 +27,18 @@ public class UserQuestionHistoryDao {
 			}
 		}
 
-		return userQuestionHistory;
+		return question;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<UserAnswerHistory> getAllUserAnswerHistory() {
+	public List<Question> getAllQuestions() {
 		Transaction transaction = null;
-		List<UserAnswerHistory> players = new ArrayList<UserAnswerHistory>();
+		List<Question> questions = new ArrayList<Question>();
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			players = session.createQuery("from user_question_history").list();
+			questions = session.createQuery("from question").list();
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -47,32 +47,16 @@ public class UserQuestionHistoryDao {
 			}
 		}
 
-		return players;
+		return questions;
 	}
 
-	public void saveAnswerHistory(UserAnswerHistory userQuestionHistory) {
+	public void saveQuestion(Question question) {
 		Transaction transaction = null;
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			session.save(userQuestionHistory);
-
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-		}
-	}
-
-	public void updateUserAnswerHistory(UserAnswerHistory userQuestionHistory) {
-		Transaction transaction = null;
-
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-			transaction = session.beginTransaction();
-
-			session.saveOrUpdate(userQuestionHistory);
+			session.save(question);
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -83,13 +67,30 @@ public class UserQuestionHistoryDao {
 
 	}
 
-	public void deleteUserAnswerHistory(UserAnswerHistory userQuestionHistory) {
+	public void updateQuestion(Question question) {
 		Transaction transaction = null;
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			session.delete(userQuestionHistory);
+			session.saveOrUpdate(question);
+
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+		}
+
+	}
+
+	public void deleteQuestion(Question question) {
+		Transaction transaction = null;
+
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+			transaction = session.beginTransaction();
+
+			session.delete(question);
 
 			transaction.commit();
 		} catch (Exception e) {
