@@ -29,10 +29,9 @@ public class Topic {
 		super();
 	}
 
-	public Topic(String topic, List<Kahoot> kahoots) {
+	public Topic(String topic) {
 		super();
 		this.topic = topic;
-		this.kahoots = kahoots;
 	}
 
 	public long getTopicId() {
