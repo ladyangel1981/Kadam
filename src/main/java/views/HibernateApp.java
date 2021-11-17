@@ -35,6 +35,7 @@ public class HibernateApp {
 		for(User element: users) {
 			System.out.println(element);
 		}
+		/*
 		//String topic
 		Topic topic1 = new Topic("Peliculas");
 		Topic topic2 = new Topic("Matematicas");
@@ -48,8 +49,9 @@ public class HibernateApp {
 		topicDao.saveTopic(topic3);
 		topicDao.saveTopic(topic4);
 
-
+*/
 		KahootDao kahootDao = new KahootDao();
+		/*
 		//String title, String description, String language, String image, boolean isFavorite
 		Kahoot kahoot1 = new Kahoot("Peliculas infantiles y superheroes", "ES", "Peliculas Marvel","src" + File.separator +"main"+File.separator+"java"+File.separator+"images"+File.separator+"logoKadamm.PNG",true);
 		kahootDao.saveKahoot(kahoot1);
@@ -125,7 +127,12 @@ public class HibernateApp {
 		answerDao.saveAnswer(answer14);
 		answerDao.saveAnswer(answer15);
 		answerDao.saveAnswer(answer16);
-
+		
+		*/
+		
+		for (Kahoot element: kahootDao.getAllKahoots()) {
+			System.out.println(element);
+		}
 
 	}
 

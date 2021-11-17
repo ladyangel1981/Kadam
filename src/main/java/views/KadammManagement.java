@@ -95,7 +95,7 @@ public class KadammManagement extends JFrame {
 		list.setModel(new AbstractListModel() {
 			KahootDao kahootDao = new KahootDao();
 			Kahoot kahoot = new Kahoot();
-			List<String> values = kahootDao.getAllKahoots().stream().map(name->kahoot.getTitle()).collect(Collectors.toList());
+			List<Kahoot> values = kahootDao.getAllKahoots();
 			public int getSize() {
 				return values.size();
 			}

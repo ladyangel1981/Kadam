@@ -35,7 +35,7 @@ public class KahootDao {
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
-			kahoots = session.createQuery("from kahoot").list();
+			kahoots = session.createQuery("from Kahoot").list();
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
