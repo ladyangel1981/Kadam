@@ -36,7 +36,7 @@ public class CompetitionDao {
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			competitions = session.createQuery("from competition").list();
+			competitions = session.createQuery("from Competition").list();
 
 			transaction.commit();
 		} catch (Exception e) {

@@ -172,10 +172,8 @@ public class Kahoot {
 
 	@Override
 	public String toString() {
-		return "Kahoot [kahootId=" + kahootId + ", title=" + title + ", description=" + description + ", language="
-				+ language + ", image=" + image + ", timePlays=" + timePlays + ", isFavorite=" + isFavorite + "]";
+		return "Kahoot [ ID = " + kahootId + ", Title = " + title + ", Description = " + description + ", Language = "
+				+ language + ", Played = " + timePlays + ", Favorite = " + isFavorite + " ]";
 	}
-
-	
 
 }

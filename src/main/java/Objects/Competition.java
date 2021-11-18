@@ -75,4 +75,8 @@ public class Competition {
 		this.userQuestionHistories = userQuestionHistories;
 	}
 
+	@Override
+	public String toString() {
+		return "Competition [ID = " + competitionId + ", Kahoot = " + kahoot + ", Players = " + players + "]";
+	}
 }

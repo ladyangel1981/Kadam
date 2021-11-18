@@ -95,4 +95,10 @@ public class QuestionType {
 		this.questions = questions;
 	}
 
+	@Override
+	public String toString() {
+		return "QuestionType [ ID = " + id + ", Text = " + text + ", Timeout = " + timeout + ", Score = " + score
+				+ ", Answer Options = " + answerOption + ", Questions = " + questions + " ]";
+	}
+
 }

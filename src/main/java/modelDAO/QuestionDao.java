@@ -38,7 +38,7 @@ public class QuestionDao {
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			questions = session.createQuery("from question").list();
+			questions = session.createQuery("from Question").list();
 
 			transaction.commit();
 		} catch (Exception e) {

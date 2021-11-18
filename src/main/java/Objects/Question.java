@@ -86,4 +86,10 @@ public class Question {
 		this.answers = answers;
 	}
 
+	@Override
+	public String toString() {
+		return "Question [ ID = " + questionId + ", Text = " + questionText + ", Question Type = " + questionType
+				+ ", kahoot = " + kahoot + ", Answers = " + answers + " ]";
+	}
+
 }

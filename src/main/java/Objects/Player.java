@@ -76,4 +76,9 @@ public class Player {
 		this.userQuestionHistories = userQuestionHistories;
 	}
 
+	@Override
+	public String toString() {
+		return "Player [ ID = " + playerId + ", Nickname = " + nickname + ", Competitions = " + competitions + " ]";
+	}
+
 }

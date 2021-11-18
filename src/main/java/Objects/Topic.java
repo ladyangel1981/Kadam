@@ -58,4 +58,9 @@ public class Topic {
 		this.kahoots = kahoots;
 	}
 
+	@Override
+	public String toString() {
+		return "Topic [ ID = " + topicId + ", Topic = " + topic + ", Kahoots = " + kahoots + " ]";
+	}
+
 }

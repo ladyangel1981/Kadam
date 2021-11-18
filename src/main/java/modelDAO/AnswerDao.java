@@ -35,7 +35,7 @@ public class AnswerDao {
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
-			answers = session.createQuery("from answer").list();
+			answers = session.createQuery("from Answer").list();
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {

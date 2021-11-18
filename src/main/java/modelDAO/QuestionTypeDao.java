@@ -31,14 +31,14 @@ public class QuestionTypeDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<QuestionType> getAllQuestions() {
+	public List<QuestionType> getAllQuestionsType() {
 		Transaction transaction = null;
 		List<QuestionType> questionTypes = new ArrayList<QuestionType>();
 
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			questionTypes = session.createQuery("from question_type").list();
+			questionTypes = session.createQuery("FROM QUESTION_TYPE").getResultList();
 
 			transaction.commit();
 		} catch (Exception e) {

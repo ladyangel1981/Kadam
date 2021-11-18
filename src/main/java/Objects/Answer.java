@@ -87,4 +87,10 @@ public class Answer {
 		this.userAnswerHistories = userAnswerHistories;
 	}
 
+	@Override
+	public String toString() {
+		return "Answer [ID = " + answerId + ", Text = " + answerText + ", Is Correct = " + isCorrect + ", Question = "
+				+ question + "]";
+	}
+
 }
