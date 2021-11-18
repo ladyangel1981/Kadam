@@ -2,6 +2,7 @@ package views;
 
 import java.util.List;
 
+import Objects.Answer;
 import Objects.Kahoot;
 import Objects.Question;
 import Objects.QuestionType;
@@ -23,16 +24,6 @@ public class HibernateApp {
 		 * userDao.saveUser(user5); User user6 = new User("jesus", "jesus@hotmail.com",
 		 * "123"); userDao.saveUser(user6);
 		 */
-		User user3 = userDao.getUserById(1);
-		User user4 = userDao.getUserByName("lady"); // Esto no va
-		System.out.println(user3);
-		System.out.println(user4);
-
-		List<User> users = userDao.getAllUsers();
-
-		for (User element : users) {
-			System.out.println(element);
-		}
 
 		QuestionDao questionDao = new QuestionDao();
 		KahootDao kahootDao = new KahootDao();
@@ -118,13 +109,34 @@ public class HibernateApp {
 		 * 
 		 */
 
+		User user3 = userDao.getUserById(1);
+		User user4 = userDao.getUserByName("lady"); // Esto no va System.out.println(user3);
+		System.out.println(user4);
+
+		List<User> users = userDao.getAllUsers();
+
+		for (User element : users) {
+			System.out.println(element);
+		}
+
 		for (Kahoot element : kahootDao.getAllKahoots()) {
+			System.out.println(element);
+		}
+
+		for (Question element : questionDao.getAllQuestions()) {
+			System.out.println(element);
+		}
+
+		for (Answer element : answerDao.getAllAnswers()) {
 			System.out.println(element);
 		}
 
 		for (QuestionType element : questionTypeDao.getAllQuestionsType()) {
 			System.out.println(element);
 		}
+
+		answerDao.getAnswerById(1);
+		System.out.println();
 
 	}
 

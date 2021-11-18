@@ -78,7 +78,7 @@ public class Player {
 
 	@Override
 	public String toString() {
-		return "Player [ ID = " + playerId + ", Nickname = " + nickname + ", Competitions = " + competitions + " ]";
+		return "Player [ ID = " + playerId + ", Nickname = " + nickname + " ]";
 	}
 
 }

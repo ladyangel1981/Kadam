@@ -13,9 +13,11 @@ public class TopicDao {
 
 	public Topic getTopicById(long id) {
 		Transaction transaction = null;
-		Topic topic = null;
+		Session session = null;
+		Topic topic = new Topic();
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			topic = session.get(Topic.class, id);
@@ -25,6 +27,11 @@ public class TopicDao {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 
 		return topic;
@@ -33,17 +40,25 @@ public class TopicDao {
 	@SuppressWarnings("unchecked")
 	public List<Topic> getAllTopics() {
 		Transaction transaction = null;
+		Session session = null;
 		List<Topic> topics = new ArrayList<Topic>();
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			topics = session.createQuery("from Topic").list();
 
 			transaction.commit();
+
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
 			}
 		}
 
@@ -52,8 +67,10 @@ public class TopicDao {
 
 	public void saveTopic(Topic topic) {
 		Transaction transaction = null;
+		Session session = null;
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			session.save(topic);
@@ -63,45 +80,86 @@ public class TopicDao {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 	}
 
 	public void updateTopic(Topic topic) {
 		Transaction transaction = null;
+		Session session = null;
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			session.saveOrUpdate(topic);
 
 			transaction.commit();
+
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
-
 	}
 
 	public void deleteTopic(Topic topic) {
 		Transaction transaction = null;
+		Session session = null;
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			session.delete(topic);
 
 			transaction.commit();
+
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
 			}
 		}
 
 	}
 
 	public Topic getByTopicName(String topicName) {
-		return null;
+		Transaction transaction = null;
+		Session session = null;
+		Topic topic = new Topic();
+
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+
+			topic = (Topic) session.createQuery("from Topic where topic = " + topicName);
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+		return topic;
+
 	}
 
 }

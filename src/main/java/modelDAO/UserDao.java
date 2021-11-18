@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import HibernateUtils.HibernateUtil;
 import Objects.User;
@@ -13,9 +14,11 @@ public class UserDao {
 
 	public User getUserById(long id) {
 		Transaction transaction = null;
-		User user = null;
+		Session session = null;
+		User user = new User();
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			user = session.get(User.class, id);
@@ -25,24 +28,37 @@ public class UserDao {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
-
 		return user;
 	}
-	
+
+	@SuppressWarnings({ "unused", "deprecation" })
 	public User getUserByName(String name) {
 		Transaction transaction = null;
-		User user = null;
+		Session session = null;
+		User user = new User();
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
-			user = (User) session.createQuery("from User where username =" + name);
+			Query query = session.createQuery("from User where username = :name");
+			query.setString("name", name);
+			user = (User) query.uniqueResult();
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
-				//transaction.rollback();
-				System.out.println(e);
+				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
 			}
 		}
 
@@ -52,9 +68,11 @@ public class UserDao {
 	@SuppressWarnings("unchecked")
 	public List<User> getAllUsers() {
 		Transaction transaction = null;
+		Session session = null;
 		List<User> users = new ArrayList<User>();
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			users = session.createQuery("from User").list();
@@ -64,6 +82,11 @@ public class UserDao {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 
 		return users;
@@ -71,8 +94,9 @@ public class UserDao {
 
 	public void saveUser(User user) {
 		Transaction transaction = null;
-
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		Session session = null;
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			session.save(user);
@@ -82,21 +106,34 @@ public class UserDao {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 	}
 
 	public void updateUser(User user) {
 		Transaction transaction = null;
+		Session session = null;
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			session.saveOrUpdate(user);
 
 			transaction.commit();
+
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
 			}
 		}
 
@@ -104,19 +141,26 @@ public class UserDao {
 
 	public void deleteUser(User user) {
 		Transaction transaction = null;
+		Session session = null;
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			session.delete(user);
 
 			transaction.commit();
+
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
-
 	}
-	
+
 }

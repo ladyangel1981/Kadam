@@ -98,7 +98,7 @@ public class QuestionType {
 	@Override
 	public String toString() {
 		return "QuestionType [ ID = " + id + ", Text = " + text + ", Timeout = " + timeout + ", Score = " + score
-				+ ", Answer Options = " + answerOption + ", Questions = " + questions + " ]";
+				+ ", Answer Options = " + answerOption + " ]";
 	}
 
 }

@@ -77,6 +77,6 @@ public class Competition {
 
 	@Override
 	public String toString() {
-		return "Competition [ID = " + competitionId + ", Kahoot = " + kahoot + ", Players = " + players + "]";
+		return "Competition [ ID = " + competitionId + " ]";
 	}
 }

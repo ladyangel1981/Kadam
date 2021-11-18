@@ -13,15 +13,24 @@ public class CompetitionDao {
 
 	public Competition getCompetitionById(long id) {
 		Transaction transaction = null;
+		Session session = null;
 		Competition competition = null;
-
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
+
 			competition = session.get(Competition.class, id);
+
 			transaction.commit();
+
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
 			}
 		}
 
@@ -31,9 +40,11 @@ public class CompetitionDao {
 	@SuppressWarnings("unchecked")
 	public List<Competition> getAllCompetitions() {
 		Transaction transaction = null;
+		Session session = null;
 		List<Competition> competitions = new ArrayList<Competition>();
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			competitions = session.createQuery("from Competition").list();
@@ -43,6 +54,11 @@ public class CompetitionDao {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 
 		return competitions;
@@ -50,8 +66,9 @@ public class CompetitionDao {
 
 	public void saveCompetition(Competition competition) {
 		Transaction transaction = null;
-
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		Session session = null;
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			session.save(competition);
@@ -61,13 +78,21 @@ public class CompetitionDao {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
+
 	}
 
 	public void updateCompetition(Competition competition) {
 		Transaction transaction = null;
+		Session session = null;
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			session.saveOrUpdate(competition);
@@ -77,14 +102,21 @@ public class CompetitionDao {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 
 	}
 
 	public void deleteCompetition(Competition competition) {
 		Transaction transaction = null;
+		Session session = null;
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
 			session.delete(competition);
@@ -94,8 +126,12 @@ public class CompetitionDao {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
-
 	}
 
 }

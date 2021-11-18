@@ -60,7 +60,7 @@ public class Topic {
 
 	@Override
 	public String toString() {
-		return "Topic [ ID = " + topicId + ", Topic = " + topic + ", Kahoots = " + kahoots + " ]";
+		return "Topic [ ID = " + topicId + ", Topic = " + topic + " ]";
 	}
 
 }

@@ -13,88 +13,125 @@ public class UserQuestionHistoryDao {
 
 	public UserAnswerHistory getAnswerHistoryById(long id) {
 		Transaction transaction = null;
-		UserAnswerHistory userQuestionHistory = null;
+		Session session = null;
+		UserAnswerHistory userAnswerHistory = null;
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
-			userQuestionHistory = session.get(UserAnswerHistory.class, id);
+			userAnswerHistory = session.get(UserAnswerHistory.class, id);
 
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
 		}
 
-		return userQuestionHistory;
+		return userAnswerHistory;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<UserAnswerHistory> getAllUserAnswerHistory() {
 		Transaction transaction = null;
-		List<UserAnswerHistory> players = new ArrayList<UserAnswerHistory>();
+		Session session = null;
+		List<UserAnswerHistory> userAnswerHistory = new ArrayList<UserAnswerHistory>();
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
-			players = session.createQuery("from user_question_history").list();
+			userAnswerHistory = session.createQuery("from user_answer_history").list();
+
+			transaction.commit();
+
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
+			}
+		}
+
+		return userAnswerHistory;
+	}
+
+	public void saveAnswerHistory(UserAnswerHistory userAnswerHistory) {
+		Transaction transaction = null;
+		Session session = null;
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
+			transaction = session.beginTransaction();
+
+			session.save(userAnswerHistory);
 
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-		}
-
-		return players;
-	}
-
-	public void saveAnswerHistory(UserAnswerHistory userQuestionHistory) {
-		Transaction transaction = null;
-
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-			transaction = session.beginTransaction();
-
-			session.save(userQuestionHistory);
-
-			transaction.commit();
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
 			}
 		}
 	}
 
-	public void updateUserAnswerHistory(UserAnswerHistory userQuestionHistory) {
+	public void updateUserAnswerHistory(UserAnswerHistory userAnswerHistory) {
 		Transaction transaction = null;
+		Session session = null;
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
-			session.saveOrUpdate(userQuestionHistory);
+			session.saveOrUpdate(userAnswerHistory);
 
 			transaction.commit();
+
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
 			}
 		}
 
 	}
 
-	public void deleteUserAnswerHistory(UserAnswerHistory userQuestionHistory) {
+	public void deleteUserAnswerHistory(UserAnswerHistory userAnswerHistory) {
 		Transaction transaction = null;
+		Session session = null;
 
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+		try {
+			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
-			session.delete(userQuestionHistory);
+			session.delete(userAnswerHistory);
 
 			transaction.commit();
+
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			if (session != null) {
+				session.close();
 			}
 		}
 
