@@ -13,125 +13,88 @@ public class UserQuestionHistoryDao {
 
 	public UserAnswerHistory getAnswerHistoryById(long id) {
 		Transaction transaction = null;
-		Session session = null;
-		UserAnswerHistory userAnswerHistory = null;
+		UserAnswerHistory userQuestionHistory = null;
 
-		try {
-			session = HibernateUtil.getSessionFactory().openSession();
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			userAnswerHistory = session.get(UserAnswerHistory.class, id);
+			userQuestionHistory = session.get(UserAnswerHistory.class, id);
 
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			e.printStackTrace();
-		} finally {
-			if (session != null) {
-				session.close();
-			}
 		}
 
-		return userAnswerHistory;
+		return userQuestionHistory;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<UserAnswerHistory> getAllUserAnswerHistory() {
 		Transaction transaction = null;
-		Session session = null;
-		List<UserAnswerHistory> userAnswerHistory = new ArrayList<UserAnswerHistory>();
+		List<UserAnswerHistory> players = new ArrayList<UserAnswerHistory>();
 
-		try {
-			session = HibernateUtil.getSessionFactory().openSession();
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			userAnswerHistory = session.createQuery("from user_answer_history").list();
+			players = session.createQuery("from user_question_history").list();
 
 			transaction.commit();
-
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
-			}
-			e.printStackTrace();
-		} finally {
-			if (session != null) {
-				session.close();
 			}
 		}
 
-		return userAnswerHistory;
+		return players;
 	}
 
-	public void saveAnswerHistory(UserAnswerHistory userAnswerHistory) {
+	public void saveAnswerHistory(UserAnswerHistory userQuestionHistory) {
 		Transaction transaction = null;
-		Session session = null;
-		try {
-			session = HibernateUtil.getSessionFactory().openSession();
+
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			session.save(userAnswerHistory);
+			session.save(userQuestionHistory);
 
 			transaction.commit();
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
-			}
-			e.printStackTrace();
-		} finally {
-			if (session != null) {
-				session.close();
 			}
 		}
 	}
 
-	public void updateUserAnswerHistory(UserAnswerHistory userAnswerHistory) {
+	public void updateUserAnswerHistory(UserAnswerHistory userQuestionHistory) {
 		Transaction transaction = null;
-		Session session = null;
 
-		try {
-			session = HibernateUtil.getSessionFactory().openSession();
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			session.saveOrUpdate(userAnswerHistory);
+			session.saveOrUpdate(userQuestionHistory);
 
 			transaction.commit();
-
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
-			}
-			e.printStackTrace();
-		} finally {
-			if (session != null) {
-				session.close();
 			}
 		}
 
 	}
 
-	public void deleteUserAnswerHistory(UserAnswerHistory userAnswerHistory) {
+	public void deleteUserAnswerHistory(UserAnswerHistory userQuestionHistory) {
 		Transaction transaction = null;
-		Session session = null;
 
-		try {
-			session = HibernateUtil.getSessionFactory().openSession();
+		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			transaction = session.beginTransaction();
 
-			session.delete(userAnswerHistory);
+			session.delete(userQuestionHistory);
 
 			transaction.commit();
-
 		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
-			}
-			e.printStackTrace();
-		} finally {
-			if (session != null) {
-				session.close();
 			}
 		}
 

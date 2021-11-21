@@ -8,7 +8,6 @@ import org.hibernate.Transaction;
 
 import HibernateUtils.HibernateUtil;
 import Objects.QuestionType;
-import Objects.User;
 
 public class QuestionTypeDao {
 

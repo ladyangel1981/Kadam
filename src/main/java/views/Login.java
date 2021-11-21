@@ -7,15 +7,9 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -39,8 +33,9 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
-	private String pathUserPass = "src" + File.separator + "main" + File.separator + "java" + File.separator
-			+ "Utilities" + File.separator + "user_pass";
+	private static File user_pass;
+	private static final String USERPASSPATH = "src" + File.separator + "main" + File.separator + "java"
+			+ File.separator + "Utilities" + File.separator + "user_pass.txt";
 
 	/**
 	 * Launch the application.
@@ -50,10 +45,9 @@ public class Login extends JFrame {
 			@Override
 			public void run() {
 				try {
-					// HibernateApp apphibernate = new HibernateApp();
-					// apphibernate.main(args);
 					ReadXMLDomParser readXMLDomParser = new ReadXMLDomParser();
 					readXMLDomParser.readXML();
+					// fileReader();
 					Login frame = new Login();
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
@@ -66,10 +60,8 @@ public class Login extends JFrame {
 
 	/**
 	 * Create the frame.
-	 * 
-	 * @throws IOException
 	 */
-	public Login() throws IOException {
+	public Login() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("KADAMM");
 		ImageIcon img = new ImageIcon("src" + File.separator + "main" + File.separator + "java" + File.separator
@@ -116,36 +108,6 @@ public class Login extends JFrame {
 		textField = new JTextField();
 		textField.setColumns(10);
 		textField.setBounds(216, 88, 100, 20);
-		textField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-
-				if (e.getKeyChar() == '\n') {
-					FileReader fileReader = null;
-					try {
-						fileReader = new FileReader(new File(pathUserPass));
-						BufferedReader br = new BufferedReader(fileReader);
-						String linea = br.readLine();
-						List<String> lineaList = new ArrayList<>();
-						linea.split(linea);
-						System.out.println(linea);
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-
-//				lineaList.addAll(linea.split(linea));
-//				while (linea != null) {
-//					fichero.add(linea);
-//					linea = br.readLine();
-//				}
-				}
-
-			}
-		});
 		contentPane.add(textField);
 
 		JLabel lblUser = new JLabel("User:");
@@ -160,13 +122,13 @@ public class Login extends JFrame {
 
 		passwordField = new JPasswordField();
 		passwordField.setBounds(216, 123, 100, 20);
-		System.out.println(passwordField.getAction());
 		contentPane.add(passwordField);
 
 		JCheckBox chckbxRememberMyPassword = new JCheckBox("Remember my password");
 		chckbxRememberMyPassword.setForeground(new Color(175, 238, 238));
 		chckbxRememberMyPassword.setBounds(125, 157, 180, 25);
 		chckbxRememberMyPassword.setBackground(Color.decode("#374151"));
+		contentPane.add(chckbxRememberMyPassword);
 
 		JButton btnLogin = new JButton("Login");
 		btnLogin.setBounds(170, 192, 110, 35);
@@ -176,46 +138,45 @@ public class Login extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				UserDao userDao = new UserDao();
-				String name = textField.getText();
-
 				List<User> users = userDao.getAllUsers();
-
-				User getUser = userDao.getUserByName(name);
-
-				List<User> userList = userDao.getAllUsers();
-				User user = new User();
-				try {
-					user = userList.stream().filter(x -> x.getUsername().equals(name)).findAny()
-							.orElseThrow(() -> new ErrorControl("User doesn't exist", "Error"));
-					if (user != null) {
-						if (user.getPassword().equals(String.valueOf(passwordField.getPassword()))) {
+				for (User element : users) {
+					System.out.println(element);
+					if (element.getUsername().equals(textField.getText())) {
+						if (element.getPassword().equals(String.valueOf(passwordField.getPassword()))) {
 							if (chckbxRememberMyPassword.isSelected()) {
 								try {
-
-									File filesavePass = new File(pathUserPass);
-									FileWriter fw = new FileWriter(filesavePass, true);
-									fw.write("username: " + textField.getText() + ",password: "
-											+ String.valueOf(passwordField.getPassword()) + "\n");
+									user_pass = new File(USERPASSPATH);
+									FileWriter fw = new FileWriter(user_pass, true);
+									fw.write(textField.getText() + "," + String.valueOf(passwordField.getPassword()));
 									fw.close();
 								} catch (IOException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
+
 							}
 							KadammManagement kadammManagemente = new KadammManagement();
 							kadammManagemente.main(null);
 						} else {
 							new ErrorControl("Password incorrect", "Warning");
-							passwordField.setText(null);
 						}
+					} else {
+						new ErrorControl("Not found user!", "Error");
 					}
-
-				} catch (ErrorControl e1) {
-					e1.printStackTrace();
 				}
+
 			}
 		});
 
-		contentPane.add(chckbxRememberMyPassword);
+//			private static void fileReader() throws FileNotFoundException, IOException {
+//				FileReader fileReader = new FileReader(new File(ruta));
+//				BufferedReader br = new BufferedReader(fileReader);
+//				String linea = br.readLine();
+//				while (linea != null) {
+//					fichero.add(linea);
+//					linea = br.readLine();
+//				}
+//			}
+//		});
+
 	}
 }

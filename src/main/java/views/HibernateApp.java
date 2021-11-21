@@ -112,6 +112,7 @@ public class HibernateApp {
 		User user3 = userDao.getUserById(1);
 		User user4 = userDao.getUserByName("lady"); // Esto no va System.out.println(user3);
 		System.out.println(user4);
+		System.out.println(user3);
 
 		List<User> users = userDao.getAllUsers();
 
