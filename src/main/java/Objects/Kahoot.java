@@ -170,4 +170,10 @@ public class Kahoot {
 		this.competitions = competitions;
 	}
 
+	@Override
+	public String toString() {
+		return "Kahoot [ ID = " + kahootId + ", Title = " + title + ", Description = " + description + ", Language = "
+				+ language + ", Played = " + timePlays + ", Favorite = " + isFavorite + " ]";
+	}
+
 }

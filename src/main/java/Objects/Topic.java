@@ -29,10 +29,9 @@ public class Topic {
 		super();
 	}
 
-	public Topic(String topic, List<Kahoot> kahoots) {
+	public Topic(String topic) {
 		super();
 		this.topic = topic;
-		this.kahoots = kahoots;
 	}
 
 	public long getTopicId() {
@@ -57,6 +56,11 @@ public class Topic {
 
 	public void setKahoots(List<Kahoot> kahoots) {
 		this.kahoots = kahoots;
+	}
+
+	@Override
+	public String toString() {
+		return "Topic [ ID = " + topicId + ", Topic = " + topic + " ]";
 	}
 
 }

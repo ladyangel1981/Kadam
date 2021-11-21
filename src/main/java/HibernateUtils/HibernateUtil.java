@@ -1,12 +1,13 @@
 package HibernateUtils;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
-import org.hibernate.service.ServiceRegistry;
 
 import Objects.Answer;
 import Objects.Competition;
@@ -20,48 +21,51 @@ import Objects.UserAnswerHistory;
 
 public class HibernateUtil {
 	private static SessionFactory sessionFactory;
+	private static StandardServiceRegistry registry;
 
 	public static SessionFactory getSessionFactory() {
 		if (sessionFactory == null) {
 			try {
-				Configuration configuration = new Configuration();
+				StandardServiceRegistryBuilder registryBuilder = new StandardServiceRegistryBuilder();
 
-				// Hibernate settings equivalent to hibernate.cfg.xml's properties
-				Properties settings = new Properties();
-				settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-				settings.put(Environment.URL, "jdbc:mysql://localhost:3306/Kadam?serverTimezone=UTC");
-				settings.put(Environment.USER, "root");
-				settings.put(Environment.PASS, "root");
+				Map<String, String> settings = new HashMap<>();
+				settings.put("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+				settings.put("hibernate.connection.url", "jdbc:mysql://localhost:3306/Kadam?serverTimezone=UTC");
+				settings.put("hibernate.connection.username", "root");
+				settings.put("hibernate.connection.password", "root");
+				settings.put("hibernate.show_sql", "true");
 				settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5InnoDBDialect");
 
-				settings.put(Environment.SHOW_SQL, "true");
+				settings.put("hibernate.hbm2ddl.auto", "update");
 
-				settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+				registryBuilder.applySettings(settings);
+				registry = registryBuilder.build();
+				MetadataSources sources = new MetadataSources(registry);
+				sources.addAnnotatedClass(Answer.class);
+				sources.addAnnotatedClass(Competition.class);
+				sources.addAnnotatedClass(Kahoot.class);
+				sources.addAnnotatedClass(Player.class);
+				sources.addAnnotatedClass(Question.class);
+				sources.addAnnotatedClass(QuestionType.class);
+				sources.addAnnotatedClass(Topic.class);
+				sources.addAnnotatedClass(User.class);
+				sources.addAnnotatedClass(UserAnswerHistory.class);
 
-				settings.put(Environment.HBM2DDL_AUTO, "update");
-
-				configuration.setProperties(settings);
-
-				configuration.addAnnotatedClass(Answer.class);
-				configuration.addAnnotatedClass(Competition.class);
-				configuration.addAnnotatedClass(Kahoot.class);
-				configuration.addAnnotatedClass(Player.class);
-				configuration.addAnnotatedClass(Question.class);
-				configuration.addAnnotatedClass(QuestionType.class);
-				configuration.addAnnotatedClass(Topic.class);
-				configuration.addAnnotatedClass(User.class);
-				configuration.addAnnotatedClass(UserAnswerHistory.class);
-
-				ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-						.applySettings(configuration.getProperties()).build();
-				System.out.println("Hibernate Java Config Service Registry Created");
-
-				sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+				sessionFactory = sources.buildMetadata().buildSessionFactory();
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println("SessionFactory creation failed");
+				if (registry != null) {
+					StandardServiceRegistryBuilder.destroy(registry);
+				}
 			}
 		}
 		return sessionFactory;
+	}
+
+	public static void shutdown() {
+		if (registry != null) {
+			StandardServiceRegistryBuilder.destroy(registry);
+		}
 	}
 }
