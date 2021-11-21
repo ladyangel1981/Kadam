@@ -1,2 +1,0 @@
-# Kadam
-Kadam_DesktopLib
