@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
 
-import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,7 +27,8 @@ public class KadammManagement extends JFrame {
 
 	private static final long serialVersionUID = 9176526853703877107L;
 	private JPanel contentPane;
-	public static String selected;
+	private static String selected;
+	private static long indexKahoot;
 
 	/**
 	 * Launch the application.
@@ -50,7 +51,7 @@ public class KadammManagement extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes", "serial" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public KadammManagement() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("KADAMM MANAGEMENT");
@@ -90,27 +91,24 @@ public class KadammManagement extends JFrame {
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
 				KadammWaitingRoom kadammWaitingRoom = new KadammWaitingRoom();
-				kadammWaitingRoom.main(selected);
+				kadammWaitingRoom.main(selected, indexKahoot);
 				dispose();
 			}
 		});
-
 		JList list = new JList();
-		list.setModel(new AbstractListModel() {
-			KahootDao kahootDao = new KahootDao();
-			Kahoot kahoot = new Kahoot();
-			List<Kahoot> values = kahootDao.getAllKahoots();
-
-			@Override
-			public int getSize() {
-				return values.size();
+		DefaultListModel listModelKahoot = new DefaultListModel();
+		KahootDao kahootDao = new KahootDao();
+		List<Kahoot> kahootList = kahootDao.getAllKahoots();
+		int contador = 0;
+		indexKahoot = 0;
+		for (Kahoot element : kahootList) {
+			if (contador < kahootList.size()) {
+				listModelKahoot.add(contador, element.getTitle());
+				indexKahoot = element.getKahootId();
 			}
-
-			@Override
-			public Object getElementAt(int index) {
-				return values.get(index);
-			}
-		});
+			contador++;
+		}
+		list.setModel(listModelKahoot);
 		scrollPane.setViewportView(list);
 		list.addListSelectionListener(new ListSelectionListener() {
 			@Override

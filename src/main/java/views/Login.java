@@ -53,7 +53,6 @@ public class Login extends JFrame {
 			@Override
 			public void run() {
 				try {
-					// apphibernate.main(args);
 					ReadXMLDomParser readXMLDomParser = new ReadXMLDomParser();
 					readXMLDomParser.readXML();
 					Login frame = new Login();
@@ -142,7 +141,6 @@ public class Login extends JFrame {
 						}
 					}
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
