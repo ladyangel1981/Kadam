@@ -3,9 +3,9 @@ package ServerConfig;
 import java.io.IOException;
 import java.net.Socket;
 
-import net.sf.lipermi.exception.LipeRMIException;
-import net.sf.lipermi.handler.CallHandler;
-import net.sf.lipermi.net.IServerListener;
+import lipermi.exception.LipeRMIException;
+import lipermi.handler.CallHandler;
+import lipermi.net.IServerListener;
 
 public class Server implements ServerInterface {
 
@@ -13,7 +13,7 @@ public class Server implements ServerInterface {
         try {
             CallHandler callHandler = new CallHandler();
             callHandler.registerGlobal(ServerInterface.class, this);
-            net.sf.lipermi.net.Server server = new net.sf.lipermi.net.Server();
+            lipermi.net.Server server = new lipermi.net.Server();
             server.bind(7777, callHandler);
             server.addServerListener(new IServerListener() {
                 
