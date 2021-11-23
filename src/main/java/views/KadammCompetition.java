@@ -22,8 +22,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import Exception.ErrorControl;
+import Objects.Answer;
 import Objects.Question;
 import XMLconfig.ReadXMLDomParser;
+import modelDAO.AnswerDao;
 import modelDAO.QuestionDao;
 
 public class KadammCompetition extends JFrame {
@@ -31,18 +34,20 @@ public class KadammCompetition extends JFrame {
 	private static final long serialVersionUID = -5768139670483928821L;
 
 	private JPanel contentPane;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-
-	private JLabel lblNewLabel;
+	private JTextField answer1;
+	private JTextField answer2;
+	private JTextField answer3;
+	private JTextField answer4;
 	private Timer timer = new Timer();
+	private JLabel questionLabel;
 	private JLabel timerJLabel = new JLabel();
-	private static QuestionDao questionDao;
+	private static QuestionDao questionDao = new QuestionDao();
 	private static List<Question> questionList = new ArrayList<>();
+	private static List<Answer> answerList = new ArrayList<>();
+	private static AnswerDao answerDao = new AnswerDao();
 	private String question;
 	private static int cont = 0;
+	private static int contador = 0;
 
 	/**
 	 * Launch the application.
@@ -71,7 +76,7 @@ public class KadammCompetition extends JFrame {
 		ImageIcon img = new ImageIcon("src" + File.separator + "main" + File.separator + "java" + File.separator
 				+ "images" + File.separator + "logoKadamm.PNG");
 		setIconImage(img.getImage());
-		setSize(675, 460);
+		setSize(769, 499);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.decode("#374151"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -88,15 +93,15 @@ public class KadammCompetition extends JFrame {
 		flowLayout.setHgap(20);
 		panelPrincipal.add(panelSuperior, BorderLayout.NORTH);
 		panelSuperior.setBackground(Color.decode("#374151"));
+		
 		Long kahootIndex = indexKahoot;
-		System.out.println("competition" + kahootIndex);
-		System.out.println();
 		questionList = questionDao.getAllQuestionsByKahootID(kahootIndex);
-
-		lblNewLabel = new JLabel(question); // Entre parentesi va questionText
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		lblNewLabel.setForeground(new Color(175, 238, 238));
-		panelSuperior.add(lblNewLabel);
+		question = questionList.get(cont).getQuestionText();
+		
+		questionLabel = new JLabel(question); // Entre parentesi va questionText
+		questionLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		questionLabel.setForeground(new Color(175, 238, 238));
+		panelSuperior.add(questionLabel);
 
 		JPanel panelInferior = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panelInferior.getLayout();
@@ -111,11 +116,37 @@ public class KadammCompetition extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				question = questionList.get(cont).getQuestionText();
 				cont++;
+				if(cont > questionList.size()) {
+					new ErrorControl("Questions are finished!!", "Warning");
+				}
+				question = questionList.get(cont).getQuestionText();
+				questionLabel.setText(question);
+				Timer timer = new Timer();
+				timer.scheduleAtFixedRate(new TimerTask() {
+					int i = ReadXMLDomParser.getConfiguration().getTimeout();
+
+					@Override
+					public void run() {
+
+						timerJLabel.setText(String.valueOf(i));
+
+						i--;
+
+						if (i < 0) {
+							timer.cancel();
+							btnNewButton.setEnabled(true);
+						}
+					}
+				}, 0, 1000);
+				answerList = answerDao.getAllAnswersByQuestionId(questionList.get(cont).getQuestionId());
+				answer1.setText(answerList.get(0).getAnswerText());
+				answer2.setText(answerList.get(1).getAnswerText());
+				answer3.setText(answerList.get(2).getAnswerText());
+				answer4.setText(answerList.get(3).getAnswerText());
 			}
 		});
-
+	
 		timer.scheduleAtFixedRate(new TimerTask() {
 			int i = ReadXMLDomParser.getConfiguration().getTimeout();
 
@@ -132,7 +163,7 @@ public class KadammCompetition extends JFrame {
 				}
 			}
 		}, 0, 1000);
-
+		
 		timerJLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		timerJLabel.setForeground(new Color(175, 238, 238));
 		panelInferior.add(timerJLabel);
@@ -142,30 +173,36 @@ public class KadammCompetition extends JFrame {
 		panelPrincipal.add(panelCentral, BorderLayout.CENTER);
 		panelCentral.setBackground(Color.decode("#374151"));
 		panelCentral.setLayout(new GridLayout(2, 2, 5, 5));
+		
+		answer1 = new JTextField();
+		answer1.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		answer1.setBackground(Color.RED);
+		panelCentral.add(answer1);
+		answer1.setColumns(10);
+		
+		answer2 = new JTextField();
+		answer2.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		answer2.setBackground(Color.GREEN);
+		panelCentral.add(answer2);
+		answer2.setColumns(10);
+		
+		answer3 = new JTextField();
+		answer3.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		answer3.setBackground(Color.BLUE);
+		panelCentral.add(answer3);
+		answer3.setColumns(10);
 
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		textField_2.setBackground(Color.RED);
-		panelCentral.add(textField_2);
-		textField_2.setColumns(10);
+		answer4 = new JTextField();
+		answer4.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		answer4.setBackground(Color.YELLOW);
+		panelCentral.add(answer4);
+		answer4.setColumns(10);
 
-		textField_4 = new JTextField();
-		textField_4.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		textField_4.setBackground(Color.BLUE);
-		panelCentral.add(textField_4);
-		textField_4.setColumns(10);
-
-		textField_5 = new JTextField();
-		textField_5.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		textField_5.setBackground(Color.YELLOW);
-		panelCentral.add(textField_5);
-		textField_5.setColumns(10);
-
-		textField_3 = new JTextField();
-		textField_3.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		textField_3.setBackground(Color.GREEN);
-		panelCentral.add(textField_3);
-		textField_3.setColumns(10);
+		answerList = answerDao.getAllAnswersByQuestionId(questionList.get(cont).getQuestionId());
+		answer1.setText(answerList.get(0).getAnswerText());
+		answer2.setText(answerList.get(1).getAnswerText());
+		answer3.setText(answerList.get(2).getAnswerText());
+		answer4.setText(answerList.get(3).getAnswerText());
 	}
 
 }

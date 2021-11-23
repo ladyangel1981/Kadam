@@ -43,8 +43,7 @@ public class HibernateApp {
 //		topicDao.saveTopic(topic3);
 //		topicDao.saveTopic(topic4);
 
-		// String title, String description, String language, String image, boolean
-		// isFavorite
+		// String title, String description, String language, boolean isFavorite
 //		Kahoot kahoot1 = new Kahoot(
 //				"Peliculas infantiles y superheroes", "ES", "Peliculas Marvel", "src" + File.separator + "main"
 //						+ File.separator + "java" + File.separator + "images" + File.separator + "logoKadamm.PNG",
@@ -89,19 +88,18 @@ public class HibernateApp {
 //		Answer answer5 = new Answer("Dr. Strange", question2, false);
 //		Answer answer6 = new Answer("Dr. Who", question2, false);
 //		Answer answer7 = new Answer("Dr. Doom", question2, false);
-//		Answer answer8 = new Answer("Dr. Banner", question2, false);
+//		Answer answer8 = new Answer("Dr. Banner", question2, true);
 //		Answer answer9 = new Answer("Asgard", question3, false);
 //		Answer answer10 = new Answer("Odin", question3, false);
 //		Answer answer11 = new Answer("Heimdall", question3, false);
-//		Answer answer12 = new Answer("Loki", question3, false);
+//		Answer answer12 = new Answer("Loki", question3, true);
 //		Answer answer13 = new Answer("4", question4, false);
-//		Answer answer14 = new Answer("5", question4, false);
-//		Answer answer15 = new Answer("2", question4, true);
+//		Answer answer14 = new Answer("5", question4, true);
+//		Answer answer15 = new Answer("2", question4, false);
 //		Answer answer16 = new Answer("6", question4, false);
 
 //		answerDao.saveAnswer(answer1);
 //		answerDao.saveAnswer(answer2);
-//		answerDao.saveAnswer(answer3);
 //		answerDao.saveAnswer(answer3);
 //		answerDao.saveAnswer(answer4);
 //		answerDao.saveAnswer(answer5);
@@ -136,7 +134,7 @@ public class HibernateApp {
 			System.out.println(element);
 		}
 
-		for (Answer element : answerDao.getAllAnswers()) {
+		for (Answer element : answerDao.getAllAnswersByQuestionId(2L)) {
 			System.out.println(element);
 		}
 

@@ -22,6 +22,8 @@ import javax.swing.event.ListSelectionListener;
 
 import Objects.Kahoot;
 import modelDAO.KahootDao;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class KadammManagement extends JFrame {
 
@@ -120,6 +122,13 @@ public class KadammManagement extends JFrame {
 			}
 		});
 		JButton btnNewButton_2 = new JButton("Create Kadamm");
+		btnNewButton_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				KadammCreator kadammCreator = new KadammCreator();
+				kadammCreator.main(null);
+			}
+		});
 		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnNewButton_2.setBounds(15, 345, 190, 27);
 		contentPane.add(btnNewButton_2);

@@ -149,7 +149,7 @@ public class KadammWaitingRoom extends JFrame {
 
 		timerJLabel.setFont(new Font("Tahoma", Font.PLAIN, 50));
 		timerJLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		timerJLabel.setBounds(346, 5, 80, 80);
+		timerJLabel.setBounds(346, 17, 80, 80);
 		timerJLabel.setForeground(new Color(175, 238, 238));
 		contentPane.add(timerJLabel);
 
