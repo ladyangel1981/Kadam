@@ -90,7 +90,8 @@ public class KadammCompetition extends JFrame {
 		panelSuperior.setBackground(Color.decode("#374151"));
 		Long kahootIndex = indexKahoot;
 		System.out.println("competition" + kahootIndex);
-//		questionList = questionDao.getAllQuestionsByKahootID(kahootIndex);
+		System.out.println();
+		questionList = questionDao.getAllQuestionsByKahootID(kahootIndex);
 
 		lblNewLabel = new JLabel(question); // Entre parentesi va questionText
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
@@ -110,7 +111,7 @@ public class KadammCompetition extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				question = questionList.get(cont).getQuestionText();
+				question = questionList.get(cont).getQuestionText();
 				cont++;
 			}
 		});

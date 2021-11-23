@@ -65,7 +65,7 @@ public class KadammWaitingRoom extends JFrame {
 				+ "images" + File.separator + "logoKadamm.PNG");
 		setIconImage(img.getImage());
 		setResizable(false);
-		setSize(450, 300);
+		setSize(450, 320);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.decode("#374151"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -84,7 +84,7 @@ public class KadammWaitingRoom extends JFrame {
 		contentPane.add(scrollPane);
 
 		JButton btnStartComp = new JButton("START COMPETITION");
-		btnStartComp.setBounds(135, 230, 180, 27);
+		btnStartComp.setBounds(137, 234, 180, 27);
 		contentPane.add(btnStartComp);
 		btnStartComp.addActionListener(new ActionListener() {
 			@Override
@@ -134,7 +134,7 @@ public class KadammWaitingRoom extends JFrame {
 			lblKadamms_1.setHorizontalAlignment(SwingConstants.LEFT);
 			lblKadamms_1.setForeground(new Color(175, 238, 238));
 			lblKadamms_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-			lblKadamms_1.setBounds(12, 35, 631, 35);
+			lblKadamms_1.setBounds(12, 35, 136, 35);
 			contentPane.add(lblKadamms_1);
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
@@ -143,13 +143,13 @@ public class KadammWaitingRoom extends JFrame {
 		JLabel lblKadamms_1_1 = new JLabel("Waiting for players...");
 		lblKadamms_1_1.setHorizontalAlignment(SwingConstants.LEFT);
 		lblKadamms_1_1.setForeground(new Color(175, 238, 238));
-		lblKadamms_1_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblKadamms_1_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblKadamms_1_1.setBounds(12, 70, 117, 27);
 		contentPane.add(lblKadamms_1_1);
 
 		timerJLabel.setFont(new Font("Tahoma", Font.PLAIN, 50));
 		timerJLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		timerJLabel.setBounds(352, 27, 80, 80);
+		timerJLabel.setBounds(346, 5, 80, 80);
 		timerJLabel.setForeground(new Color(175, 238, 238));
 		contentPane.add(timerJLabel);
 

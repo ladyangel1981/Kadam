@@ -37,7 +37,7 @@ public class UserDao {
 		return user;
 	}
 
-	@SuppressWarnings({ "unused", "deprecation" })
+	@SuppressWarnings({ "deprecation", "rawtypes" })
 	public User getUserByName(String name) {
 		Transaction transaction = null;
 		Session session = null;

@@ -200,7 +200,7 @@ public class Login extends JFrame {
 		contentPane.add(chckbxRememberMyPassword);
 	}
 
-	@SuppressWarnings({ "unused", "rawtypes", "resource" })
+	@SuppressWarnings({ "resource" })
 	private static List<UserPassObject> fileReader() throws FileNotFoundException, IOException {
 		FileReader fileReader = new FileReader(new File(pathUserPass));
 		List<UserPassObject> lineaList = new ArrayList<>();

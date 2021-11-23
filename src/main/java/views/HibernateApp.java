@@ -6,13 +6,11 @@ import Objects.Answer;
 import Objects.Kahoot;
 import Objects.Question;
 import Objects.QuestionType;
-import Objects.Topic;
 import Objects.User;
 import modelDAO.AnswerDao;
 import modelDAO.KahootDao;
 import modelDAO.QuestionDao;
 import modelDAO.QuestionTypeDao;
-import modelDAO.TopicDao;
 import modelDAO.UserDao;
 
 public class HibernateApp {
@@ -27,9 +25,9 @@ public class HibernateApp {
 		UserDao userDao = new UserDao();
 		QuestionDao questionDao = new QuestionDao();
 		KahootDao kahootDao = new KahootDao();
-		Topic topic = new Topic();
-		TopicDao topicDao = new TopicDao();
-		Question question = new Question();
+//		Topic topic = new Topic();
+//		TopicDao topicDao = new TopicDao();
+//		Question question = new Question();
 		QuestionTypeDao questionTypeDao = new QuestionTypeDao();
 		AnswerDao answerDao = new AnswerDao();
 

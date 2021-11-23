@@ -59,7 +59,7 @@ public class KadammManagement extends JFrame {
 				+ "images" + File.separator + "logoKadamm.PNG");
 		setIconImage(img.getImage());
 		setResizable(false);
-		setSize(675, 460);
+		setSize(675, 470);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.decode("#374151"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
