@@ -243,15 +243,19 @@ public class KadammCreator extends JFrame {
 		btnSaveQuestion.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (txtQuestion.getText().isEmpty()) {
-					new ErrorControl("Please write a question", "WARNING");
+				while(txtQuestion.getText().isEmpty() && !chkBoxAnswer1.isSelected() || !chkBoxAnswer2.isSelected() || !chkBoxAnswer3.isSelected() || !chkBoxAnswer4.isSelected() && txtAnswer1.getText().isEmpty() && txtAnswer2.getText().isEmpty() || txtAnswer3.getText().isEmpty()) {
+					if(txtQuestion.getText().isEmpty()) {
+						new ErrorControl("Please write a question", "WARNING");
+					}					
 					if (!chkBoxAnswer1.isSelected() || !chkBoxAnswer2.isSelected() || !chkBoxAnswer3.isSelected() || !chkBoxAnswer4.isSelected()) {
 						new ErrorControl("At least one answer must be corrected.", "WARNING");
-						if (txtAnswer1.getText().isEmpty() && txtAnswer2.getText().isEmpty() || txtAnswer3.getText().isEmpty()){
-							new ErrorControl("At least each question needs minimun 2 optional answers", "WARNING");
-						}
 					}
+					if (txtAnswer1.getText().isEmpty() && txtAnswer2.getText().isEmpty() || txtAnswer3.getText().isEmpty()){
+						new ErrorControl("At least each question needs minimun 2 optional answers", "WARNING");
+					}
+					break;
 				}
+				
 			}
 		});
 		btnSaveQuestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -262,7 +266,13 @@ public class KadammCreator extends JFrame {
 		btnSaveKadam.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				if(txtTitle.getText().isEmpty()) {
+					new ErrorControl("Title must be filled", "ERROR");
+				}else {
+					Kahoot kahoot = new Kahoot(txtTitle.getText(),"ES");
+					KahootDao kahootDao = new KahootDao();
+					kahootDao.saveKahoot(kahoot);
+				}
 			}
 		});
 		btnSaveKadam.setFont(new Font("Tahoma", Font.PLAIN, 12));

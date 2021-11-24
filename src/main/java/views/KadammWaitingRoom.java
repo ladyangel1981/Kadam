@@ -8,10 +8,12 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,7 +24,11 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import Objects.Kahoot;
+import ServerConfig.Server;
+import ServerConfig.ServerTestMain;
 import XMLconfig.ReadXMLDomParser;
+import modelDAO.KahootDao;
 
 public class KadammWaitingRoom extends JFrame {
 
@@ -33,6 +39,7 @@ public class KadammWaitingRoom extends JFrame {
 	private JLabel timerJLabel = new JLabel();
 	private static ReadXMLDomParser readDomParser;
 	private static Long kahootIndex;
+	private static Server server = new Server();
 
 	/**
 	 * Launch the application.
@@ -45,6 +52,8 @@ public class KadammWaitingRoom extends JFrame {
 			public void run() {
 				try {
 					KadammWaitingRoom frame = new KadammWaitingRoom();
+					ServerTestMain serverTestMain = new ServerTestMain();
+					serverTestMain.main(null);
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -113,19 +122,19 @@ public class KadammWaitingRoom extends JFrame {
 		});
 
 		JList list = new JList();
-		list.setModel(new AbstractListModel() {
-			String[] values = new String[] {};
-
-			@Override
-			public int getSize() {
-				return values.length;
+		DefaultListModel listModelPlayers = new DefaultListModel();
+		server.setIsActive(true);
+		List<String> players = server.getUsers();
+		int contador = 0;
+//		indexKahoot = 0;
+		for (String element : players) {
+			if (contador < players.size()) {
+				listModelPlayers.add(contador, element);
+//				indexKahoot = element.getKahootId();
 			}
-
-			@Override
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+			contador++;
+		}
+		list.setModel(listModelPlayers);
 		scrollPane.setViewportView(list);
 
 		try {
