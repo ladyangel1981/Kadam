@@ -2,34 +2,63 @@ package views;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import javax.swing.ImageIcon;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
+import java.awt.Font;
 import java.io.File;
-import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JCheckBox;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+
+import Objects.Kahoot;
+import Objects.Topic;
+import modelDAO.KahootDao;
+import modelDAO.TopicDao;
+
+import javax.swing.JTextPane;
+import javax.swing.ListSelectionModel;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.event.ListSelectionListener;
+
+import Exception.ErrorControl;
+
+import javax.swing.event.ListSelectionEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class KadammCreator extends JFrame {
 
 	private static final long serialVersionUID = -7760529119031318954L;
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField txtTitle;
+	private static long indexTopic;
+	private static List<String> selectedTopics = new ArrayList<>();
+	private JTextField txtQuestion;
+	private JTextField txtAnswer1;
+	private JTextField txtAnswer2;
+	private JTextField txtAnswer3;
+	private JTextField txtAnswer4;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					KadammCreator frame = new KadammCreator();
@@ -45,124 +74,231 @@ public class KadammCreator extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public KadammCreator() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("CREATE KADAMM");
-		ImageIcon img = new ImageIcon("src" + File.separator +"main"+File.separator+"java"+File.separator+"images"+File.separator+"logoKadamm.PNG");
+		ImageIcon img = new ImageIcon("src" + File.separator + "main" + File.separator + "java" + File.separator
+				+ "images" + File.separator + "logoKadamm.PNG");
 		setIconImage(img.getImage());
 		setResizable(false);
-		setSize(675, 450);
+		setSize(685, 455);
+		
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.decode("#374151"));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JLabel lblKadamms = new JLabel("TITULO");
+
+		JLabel lblKadamms = new JLabel("TITLE");
+		lblKadamms.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblKadamms.setForeground(new Color(175, 238, 238));
-		lblKadamms.setBounds(23, 20, 38, 17);
+		lblKadamms.setBounds(23, 20, 89, 17);
 		contentPane.add(lblKadamms);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(23, 213, 390, 83);
-		contentPane.add(scrollPane);
+		txtTitle = new JTextField();
+		txtTitle.setBounds(82, 19, 340, 21);
+		contentPane.add(txtTitle);
+		txtTitle.setColumns(10);
 		
-		JList list = new JList();
-		scrollPane.setViewportView(list);
+		JScrollPane scrPaneQuestion = new JScrollPane();
+		scrPaneQuestion.setBounds(23, 72, 390, 110);
+		contentPane.add(scrPaneQuestion);
+
+		JList listQuestions = new JList();
+		listQuestions.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		scrPaneQuestion.setViewportView(listQuestions);
+
+		JLabel lblListQuestion = new JLabel("QUESTION LIST");
+		lblListQuestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblListQuestion.setForeground(new Color(175, 238, 238));
+		lblListQuestion.setBounds(23, 52, 126, 17);
+		contentPane.add(lblListQuestion);
 		
-		JButton btnNewButton_1 = new JButton("Afegir pregunta");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		JLabel lblNewQuestion = new JLabel("NEW QUESTION");
+		lblNewQuestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblNewQuestion.setForeground(new Color(175, 238, 238));
+		lblNewQuestion.setBounds(23, 192, 106, 17);
+		contentPane.add(lblNewQuestion);
+		
+		txtQuestion = new JTextField();
+		txtQuestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		txtQuestion.setBounds(23, 213, 390, 42);
+		contentPane.add(txtQuestion);
+		txtQuestion.setColumns(10);
+		
+		JScrollPane scrPaneTags = new JScrollPane();
+		scrPaneTags.setBounds(428, 72, 225, 110);
+		contentPane.add(scrPaneTags);
+
+		JList listTopic = new JList();
+		DefaultListModel listModelTopic = new DefaultListModel();
+		listTopic.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		listTopic.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		
+		TopicDao topicDao = new TopicDao();
+		List<Topic> topicList = topicDao.getAllTopics();
+		int contador = 0;
+		indexTopic = 0;
+		for (Topic element : topicList) {
+			if (contador < topicList.size()) {
+				listModelTopic.add(contador, element.getTopic());
+				indexTopic = element.getTopicId();
+			}
+			contador++;
+		}
+		
+		listTopic.addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				selectedTopics.add(listTopic.getSelectedValuesList().toString());
 			}
 		});
-		btnNewButton_1.setBounds(160, 370, 166, 36);
-		contentPane.add(btnNewButton_1);
+		listTopic.setModel(listModelTopic);
+		scrPaneTags.setViewportView(listTopic);
+
+		System.out.println(selectedTopics);
 		
-		JButton btnNewButton_4 = new JButton("Guardar nou Kadamm");
-		btnNewButton_4.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnNewButton_4.setBounds(349, 370, 166, 36);
-		contentPane.add(btnNewButton_4);
-		
-		JLabel lblChosenTopics = new JLabel("Respostes");
-		lblChosenTopics.setForeground(new Color(175, 238, 238));
-		lblChosenTopics.setBounds(428, 192, 85, 17);
-		contentPane.add(lblChosenTopics);
-		
-		JScrollPane scrollPane_1_1 = new JScrollPane();
-		scrollPane_1_1.setBounds(428, 72, 225, 110);
-		contentPane.add(scrollPane_1_1);
-		
-		JList list_1 = new JList();
-		scrollPane_1_1.setViewportView(list_1);
-		
-		JLabel lblTopics = new JLabel("Temes associats");
+		JLabel lblTopics = new JLabel("TAGS");
+		lblTopics.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblTopics.setForeground(new Color(175, 238, 238));
 		lblTopics.setBounds(428, 52, 106, 17);
 		contentPane.add(lblTopics);
+
+		JLabel lblHowtoReply = new JLabel("How to reply...");
+		lblHowtoReply.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblHowtoReply.setForeground(new Color(175, 238, 238));
+		lblHowtoReply.setBounds(252, 308, 106, 17);
+		contentPane.add(lblHowtoReply);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(23, 72, 390, 110);
-		contentPane.add(scrollPane_1);
-		
-		JList list_3 = new JList();
-		scrollPane_1.setViewportView(list_3);
-		
-		JLabel lblKadamms_1 = new JLabel("Llista de preguntes");
-		lblKadamms_1.setForeground(new Color(175, 238, 238));
-		lblKadamms_1.setBounds(23, 52, 126, 17);
-		contentPane.add(lblKadamms_1);
-		
-		JLabel lblKadamms_1_1 = new JLabel("Nova pregunta");
-		lblKadamms_1_1.setForeground(new Color(175, 238, 238));
-		lblKadamms_1_1.setBounds(23, 192, 106, 17);
-		contentPane.add(lblKadamms_1_1);
-		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Seleccionant 1 resposta");
+		JRadioButton rdbtnNewRadioButton = new JRadioButton("At least 1 correct answer");
+		rdbtnNewRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		rdbtnNewRadioButton.setBounds(252, 328, 170, 25);
 		rdbtnNewRadioButton.setSelected(true);
 		contentPane.add(rdbtnNewRadioButton);
-		
-		JLabel lblKadamms_1_1_1 = new JLabel("Com es contesta");
-		lblKadamms_1_1_1.setForeground(new Color(175, 238, 238));
-		lblKadamms_1_1_1.setBounds(252, 308, 106, 17);
-		contentPane.add(lblKadamms_1_1_1);
-		
-		JLabel lblCorrecta = new JLabel("Correcta");
+
+		JLabel lblCorrecta = new JLabel("CORRECT");
+		lblCorrecta.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblCorrecta.setForeground(new Color(175, 238, 238));
 		lblCorrecta.setBounds(608, 192, 55, 17);
 		contentPane.add(lblCorrecta);
-		
-		JCheckBox checkBox = new JCheckBox("");
-		checkBox.setBounds(625, 213, 21, 21);
-		contentPane.add(checkBox);
-		
-		JCheckBox checkBox_1 = new JCheckBox("");
-		checkBox_1.setBounds(625, 234, 21, 21);
-		contentPane.add(checkBox_1);
-		
-		JCheckBox checkBox_1_1 = new JCheckBox("");
-		checkBox_1_1.setBounds(625, 255, 21, 21);
-		contentPane.add(checkBox_1_1);
-		
-		JCheckBox checkBox_1_1_1 = new JCheckBox("");
-		checkBox_1_1_1.setBounds(625, 276, 21, 21);
-		contentPane.add(checkBox_1_1_1);
-		
-		textField = new JTextField();
-		textField.setBounds(73, 18, 340, 21);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		
-		JScrollPane scrollPane_2 = new JScrollPane();
-		scrollPane_2.setBounds(428, 213, 180, 83);
-		contentPane.add(scrollPane_2);
-		
-		JList list_2 = new JList();
-		scrollPane_2.setViewportView(list_2);
-	}
 
+		JLabel lblAnswer = new JLabel("ANSWERS");
+		lblAnswer.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblAnswer.setForeground(new Color(175, 238, 238));
+		lblAnswer.setBounds(428, 192, 85, 17);
+		contentPane.add(lblAnswer);
+		
+		JCheckBox chkBoxAnswer1 = new JCheckBox("");
+		chkBoxAnswer1.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(txtAnswer1.getText().isEmpty()) {
+					new ErrorControl("Please write an answer", "WARNING");
+				}
+			}
+		});
+		chkBoxAnswer1.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		chkBoxAnswer1.setBounds(625, 213, 21, 21);
+		contentPane.add(chkBoxAnswer1);
+
+		JCheckBox chkBoxAnswer2 = new JCheckBox("");
+		chkBoxAnswer2.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		chkBoxAnswer2.setBounds(625, 234, 21, 21);
+		chkBoxAnswer2.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(txtAnswer2.getText().isEmpty()) {
+					new ErrorControl("Please write an answer", "WARNING");
+				}
+			}
+		});
+		contentPane.add(chkBoxAnswer2);
+
+		JCheckBox chkBoxAnswer3 = new JCheckBox("");
+		chkBoxAnswer3.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		chkBoxAnswer3.setBounds(625, 255, 21, 21);
+		chkBoxAnswer3.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(txtAnswer3.getText().isEmpty()) {
+					new ErrorControl("Please write an answer", "WARNING");
+				}
+			}
+		});
+		contentPane.add(chkBoxAnswer3);
+
+		JCheckBox chkBoxAnswer4 = new JCheckBox("");
+		
+		chkBoxAnswer4.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		chkBoxAnswer4.setBounds(625, 276, 21, 21);
+		chkBoxAnswer4.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(txtAnswer4.getText().isEmpty()) {
+					new ErrorControl("Please write an answer", "WARNING");
+				}
+			}
+		});
+		contentPane.add(chkBoxAnswer4);
+
+		JButton btnSaveQuestion = new JButton("Save Question");
+		btnSaveQuestion.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				while(txtQuestion.getText().isEmpty() && !chkBoxAnswer1.isSelected() || !chkBoxAnswer2.isSelected() || !chkBoxAnswer3.isSelected() || !chkBoxAnswer4.isSelected() && txtAnswer1.getText().isEmpty() && txtAnswer2.getText().isEmpty() || txtAnswer3.getText().isEmpty()) {
+					if(txtQuestion.getText().isEmpty()) {
+						new ErrorControl("Please write a question", "WARNING");
+					}					
+					if (!chkBoxAnswer1.isSelected() || !chkBoxAnswer2.isSelected() || !chkBoxAnswer3.isSelected() || !chkBoxAnswer4.isSelected()) {
+						new ErrorControl("At least one answer must be corrected.", "WARNING");
+					}
+					if (txtAnswer1.getText().isEmpty() && txtAnswer2.getText().isEmpty() || txtAnswer3.getText().isEmpty()){
+						new ErrorControl("At least each question needs minimun 2 optional answers", "WARNING");
+					}
+					break;
+				}
+				
+			}
+		});
+		btnSaveQuestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnSaveQuestion.setBounds(160, 370, 166, 36);
+		contentPane.add(btnSaveQuestion);
+
+		JButton btnSaveKadam = new JButton("Save New Kadamm!!");
+		btnSaveKadam.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(txtTitle.getText().isEmpty()) {
+					new ErrorControl("Title must be filled", "ERROR");
+				}else {
+					Kahoot kahoot = new Kahoot(txtTitle.getText(),"ES");
+					KahootDao kahootDao = new KahootDao();
+					kahootDao.saveKahoot(kahoot);
+				}
+			}
+		});
+		btnSaveKadam.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnSaveKadam.setBounds(349, 370, 166, 36);
+		contentPane.add(btnSaveKadam);
+		
+		txtAnswer1 = new JTextField();
+		txtAnswer1.setBounds(428, 213, 191, 19);
+		contentPane.add(txtAnswer1);
+		txtAnswer1.setColumns(10);
+		
+		txtAnswer2 = new JTextField();
+		txtAnswer2.setColumns(10);
+		txtAnswer2.setBounds(428, 234, 191, 19);
+		contentPane.add(txtAnswer2);
+		
+		txtAnswer3 = new JTextField();
+		txtAnswer3.setColumns(10);
+		txtAnswer3.setBounds(428, 255, 191, 19);
+		contentPane.add(txtAnswer3);
+		
+		txtAnswer4 = new JTextField();
+		txtAnswer4.setColumns(10);
+		txtAnswer4.setBounds(428, 276, 191, 19);
+		contentPane.add(txtAnswer4);
+		
+		
+	}
 }

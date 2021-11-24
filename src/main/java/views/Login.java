@@ -53,7 +53,6 @@ public class Login extends JFrame {
 			@Override
 			public void run() {
 				try {
-					// apphibernate.main(args);
 					ReadXMLDomParser readXMLDomParser = new ReadXMLDomParser();
 					readXMLDomParser.readXML();
 					Login frame = new Login();
@@ -142,13 +141,11 @@ public class Login extends JFrame {
 						}
 					}
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
 		passwordField.setBounds(216, 123, 100, 20);
-		System.out.println(passwordField.getAction());
 		contentPane.add(passwordField);
 
 		JCheckBox chckbxRememberMyPassword = new JCheckBox("Remember my password");
@@ -202,7 +199,7 @@ public class Login extends JFrame {
 		contentPane.add(chckbxRememberMyPassword);
 	}
 
-	@SuppressWarnings({ "unused", "rawtypes", "resource" })
+	@SuppressWarnings({ "resource" })
 	private static List<UserPassObject> fileReader() throws FileNotFoundException, IOException {
 		FileReader fileReader = new FileReader(new File(pathUserPass));
 		List<UserPassObject> lineaList = new ArrayList<>();
