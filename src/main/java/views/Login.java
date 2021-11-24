@@ -146,7 +146,6 @@ public class Login extends JFrame {
 			}
 		});
 		passwordField.setBounds(216, 123, 100, 20);
-		System.out.println(passwordField.getAction());
 		contentPane.add(passwordField);
 
 		JCheckBox chckbxRememberMyPassword = new JCheckBox("Remember my password");
