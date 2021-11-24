@@ -16,14 +16,15 @@ public class ErrorControl extends Exception {
 
 	public ErrorControl(String errorMessage, String type) {
         super(errorMessage, null);
+        type.toUpperCase();
         switch (type) {
-        	case "Info":
+        	case "INFO":
         		JOptionPane.showMessageDialog(null, errorMessage, "Info: ", JOptionPane.INFORMATION_MESSAGE);
         		break;
-        	case "Warning":
+        	case "WARNING":
         		JOptionPane.showMessageDialog(null, errorMessage, "Warning: ", JOptionPane.WARNING_MESSAGE);
         		break;
-        	case "Error":
+        	case "ERROR":
         		JOptionPane.showMessageDialog(null, errorMessage, "Error: ", JOptionPane.ERROR_MESSAGE);
         		break;
         	default:
