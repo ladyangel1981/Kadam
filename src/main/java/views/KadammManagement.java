@@ -5,7 +5,10 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -21,9 +24,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import Objects.Kahoot;
+import Objects.Topic;
 import modelDAO.KahootDao;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import modelDAO.TopicDao;
 
 public class KadammManagement extends JFrame {
 
@@ -31,6 +34,13 @@ public class KadammManagement extends JFrame {
 	private JPanel contentPane;
 	private static String selected;
 	private static long indexKahoot;
+	private JButton btnPlay, btnViewDetail, btnCreateKadam, btnFilterTopic, btnEditTopic;
+	private JLabel lblKadamms, lblTopics, lblChosenTopics;
+	@SuppressWarnings("rawtypes")
+	private JList jListKahoot, jListChosenTopics, jListTopic;
+	@SuppressWarnings("rawtypes")
+	private DefaultListModel listModelKahoot, listModelChosenTopic;
+	private JScrollPane scrkKadamList, scrlChosenTopic;
 
 	/**
 	 * Launch the application.
@@ -68,27 +78,110 @@ public class KadammManagement extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel lblKadamms = new JLabel("Kadamms");
+		lblKadamms = new JLabel("Kadamms");
 		lblKadamms.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblKadamms.setForeground(new Color(175, 238, 238));
 		lblKadamms.setBounds(15, 11, 60, 17);
 		contentPane.add(lblKadamms);
 
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(15, 33, 390, 300);
-		contentPane.add(scrollPane);
+		scrkKadamList = new JScrollPane();
+		scrkKadamList.setBounds(15, 33, 390, 300);
+		contentPane.add(scrkKadamList);
+		
+		// KAHOOT LIST 
+		jListKahoot = new JList();
+		listModelKahoot = new DefaultListModel();
+		KahootDao kahootDao = new KahootDao();
+		List<Kahoot> kahootList = kahootDao.getAllKahoots();
+		int contador = 0;
+		indexKahoot = 0;
+		for (Kahoot element : kahootList) {
+			if (contador < kahootList.size()) {
+				listModelKahoot.add(contador, element.getTitle());
+			}
+			contador++;
+		}
+		jListKahoot.setModel(listModelKahoot);
+		scrkKadamList.setViewportView(jListKahoot);
 
-		JButton btnNewButton = new JButton("View Detail");
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnNewButton.setBounds(217, 345, 190, 27);
-		contentPane.add(btnNewButton);
+		jListKahoot.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+					selected = jListKahoot.getSelectedValue().toString();
+					indexKahoot = kahootDao.getKahootByTitle(selected).getKahootId();
+					
+					// CHOSEN TOPICS LIST
+					
+					jListChosenTopics = new JList();
+					listModelChosenTopic = new DefaultListModel();
+					List<Topic> topicChosenList = new ArrayList<>();
+					for (Kahoot element : kahootList) {
+						if (element.getKahootId() == indexKahoot) {
+							element.getTopics().stream().forEach(topicChosenList::add);
+							break;
+						}
+					}
+					for (int i = 0; i < topicChosenList.size(); i++) {
+						listModelChosenTopic.add(i, topicChosenList.stream().map(Topic::getTopic));
+					}
+					jListChosenTopics.setModel(listModelChosenTopic);
+					scrlChosenTopic.setViewportView(jListChosenTopics);
+					
+					btnPlay.setEnabled(true);
+				}
+			}
+		});
+		
+		// TOPICS LIST
+		
+		lblTopics = new JLabel("Topics");
+		lblTopics.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblTopics.setForeground(new Color(175, 238, 238));
+		lblTopics.setBounds(420, 11, 38, 17);
+		contentPane.add(lblTopics);
+		
+		JScrollPane scrlTopics = new JScrollPane();
+		scrlTopics.setBounds(420, 33, 225, 135);
+		contentPane.add(scrlTopics);
 
-		JButton btnNewButton_1 = new JButton("PLAY");
-		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnNewButton_1.setBounds(124, 382, 190, 27);
-		contentPane.add(btnNewButton_1);
-		btnNewButton_1.setEnabled(false);
-		btnNewButton_1.addActionListener(new ActionListener() {
+		jListTopic = new JList();
+		DefaultListModel listModelTopic = new DefaultListModel();
+		TopicDao topicDao = new TopicDao();
+		List<Topic> topicList = topicDao.getAllTopics();
+		int contadorT = 0;
+		long indexTopic = 0;
+		for (Topic element : topicList) {
+			if (contadorT < topicList.size()) {
+				listModelTopic.add(contadorT, element.getTopic());
+			}
+			contadorT++;
+		}
+		jListTopic.setModel(listModelTopic);
+		scrlTopics.setViewportView(jListTopic);
+		
+		jListTopic.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+
+		
+		lblChosenTopics = new JLabel("Chosen Topics");
+		lblChosenTopics.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblChosenTopics.setForeground(new Color(175, 238, 238));
+		lblChosenTopics.setBounds(420, 178, 85, 17);
+		contentPane.add(lblChosenTopics);
+		
+		scrlChosenTopic = new JScrollPane();
+		scrlChosenTopic.setBounds(420, 198, 225, 135);
+		contentPane.add(scrlChosenTopic);
+
+		btnPlay = new JButton("PLAY");
+		btnPlay.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnPlay.setBounds(124, 382, 190, 27);
+		contentPane.add(btnPlay);
+		btnPlay.setEnabled(false);
+		btnPlay.addActionListener(new ActionListener() {
 			@Override
 			@SuppressWarnings("static-access")
 			public void actionPerformed(ActionEvent e) {
@@ -97,76 +190,33 @@ public class KadammManagement extends JFrame {
 				dispose();
 			}
 		});
-		JList list = new JList();
-		DefaultListModel listModelKahoot = new DefaultListModel();
-		KahootDao kahootDao = new KahootDao();
-		List<Kahoot> kahootList = kahootDao.getAllKahoots();
-		int contador = 0;
-		indexKahoot = 0;
-		for (Kahoot element : kahootList) {
-			if (contador < kahootList.size()) {
-				listModelKahoot.add(contador, element.getTitle());
-				indexKahoot = element.getKahootId();
-			}
-			contador++;
-		}
-		list.setModel(listModelKahoot);
-		scrollPane.setViewportView(list);
-		list.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
-					selected = list.getSelectedValue().toString();
-					btnNewButton_1.setEnabled(true);
-				}
-			}
-		});
-		JButton btnNewButton_2 = new JButton("Create Kadamm");
-		btnNewButton_2.addMouseListener(new MouseAdapter() {
+		
+		btnCreateKadam = new JButton("Create Kadamm");
+		btnCreateKadam.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnCreateKadam.setBounds(15, 345, 190, 27);
+		btnCreateKadam.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				KadammCreator kadammCreator = new KadammCreator();
 				kadammCreator.main(null);
 			}
 		});
-		btnNewButton_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnNewButton_2.setBounds(15, 345, 190, 27);
-		contentPane.add(btnNewButton_2);
+		contentPane.add(btnCreateKadam);
 
-		JButton btnNewButton_3 = new JButton("Filter by Topic");
-		btnNewButton_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnNewButton_3.setBounds(420, 345, 225, 27);
-		contentPane.add(btnNewButton_3);
+		btnFilterTopic = new JButton("Filter by Topic");
+		btnFilterTopic.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnFilterTopic.setBounds(420, 345, 225, 27);
+		contentPane.add(btnFilterTopic);
 
-		JButton btnNewButton_4 = new JButton("Edit Topics");
-		btnNewButton_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnNewButton_4.setBounds(420, 382, 225, 27);
-		contentPane.add(btnNewButton_4);
+		btnEditTopic = new JButton("Edit Topics");
+		btnEditTopic.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnEditTopic.setBounds(420, 382, 225, 27);
+		contentPane.add(btnEditTopic);
+		
+		btnViewDetail = new JButton("View Detail");
+		btnViewDetail.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnViewDetail.setBounds(217, 345, 190, 27);
+		contentPane.add(btnViewDetail);
 
-		JScrollPane scrollPane_1_1_1 = new JScrollPane();
-		scrollPane_1_1_1.setBounds(420, 198, 225, 135);
-		contentPane.add(scrollPane_1_1_1);
-
-		JList list_2 = new JList();
-		scrollPane_1_1_1.setViewportView(list_2);
-
-		JLabel lblChosenTopics = new JLabel("Chosen Topics");
-		lblChosenTopics.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblChosenTopics.setForeground(new Color(175, 238, 238));
-		lblChosenTopics.setBounds(420, 178, 85, 17);
-		contentPane.add(lblChosenTopics);
-
-		JScrollPane scrollPane_1_1 = new JScrollPane();
-		scrollPane_1_1.setBounds(420, 33, 225, 135);
-		contentPane.add(scrollPane_1_1);
-
-		JList list_1 = new JList();
-		scrollPane_1_1.setViewportView(list_1);
-
-		JLabel lblTopics = new JLabel("Topics");
-		lblTopics.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblTopics.setForeground(new Color(175, 238, 238));
-		lblTopics.setBounds(420, 11, 38, 17);
-		contentPane.add(lblTopics);
 	}
 }

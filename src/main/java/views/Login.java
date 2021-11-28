@@ -134,14 +134,9 @@ public class Login extends JFrame {
 			@Override
 			public void focusGained(FocusEvent e) {
 				try {
-					List<UserPassObject> listUser = fileReader();
-					for (UserPassObject x : listUser) {
-						if (x.getUsername().equals(textField.getText())) {
-							passwordField.setText(x.getPassword());
-						}
-					}
+					passwordField.setText(fileReader(textField.getText()));
 				} catch (IOException e1) {
-					e1.printStackTrace();
+					new ErrorControl(e1.toString(), "ERROR");
 				}
 			}
 		});
@@ -161,55 +156,55 @@ public class Login extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				UserDao userDao = new UserDao();
-				String name = textField.getText();
-				List<User> userList = userDao.getAllUsers();
-				User user = new User();
-				try {
-					user = userList.stream().filter(x -> x.getUsername().equals(name)).findAny()
-							.orElseThrow(() -> new ErrorControl("User doesn't exist", "Error"));
-					if (user != null) {
-						if (user.getPassword().equals(String.valueOf(passwordField.getPassword()))) {
-							if (chckbxRememberMyPassword.isSelected()) {
-								try {
-
-									File filesavePass = new File(pathUserPass);
-									FileWriter fw = new FileWriter(filesavePass, true);
-									fw.write(textField.getText() + "," + String.valueOf(passwordField.getPassword())
-											+ "\n");
-									fw.close();
-								} catch (IOException e1) {
-									e1.printStackTrace();
-								}
+				User user = userDao.getUserByName(textField.getText());
+				if (user == null) {
+					new ErrorControl("User not found exception!", "ERROR");
+				} else if (user.getPassword().equals(String.valueOf(passwordField.getPassword()))) {
+					if (chckbxRememberMyPassword.isSelected()) {
+						try {
+							if (fileReader(user.getUsername()) == null) {
+								File filesavePass = new File(pathUserPass);
+								FileWriter fw = new FileWriter(filesavePass, true);
+								fw.write(
+										textField.getText() + "," + String.valueOf(passwordField.getPassword()) + "\n");
+								fw.close();
+							} else {
+								passwordField.setText(fileReader(textField.getText()));
 							}
-							KadammManagement kadammManagemente = new KadammManagement();
-							kadammManagemente.main(null);
-							dispose();
-						} else {
-							new ErrorControl("Password incorrect", "Warning");
-							passwordField.setText(null);
+						} catch (IOException e1) {
+							e1.printStackTrace();
 						}
 					}
-
-				} catch (ErrorControl e1) {
-					e1.printStackTrace();
+					KadammManagement kadammManagemente = new KadammManagement();
+					kadammManagemente.main(null);
+					dispose();
+				} else {
+					new ErrorControl("Password incorrect", "Warning");
+					passwordField.setText(null);
 				}
 			}
 		});
 
 		contentPane.add(chckbxRememberMyPassword);
+
 	}
 
-	@SuppressWarnings({ "resource" })
-	private static List<UserPassObject> fileReader() throws FileNotFoundException, IOException {
+	@SuppressWarnings("resource")
+	private static String fileReader(String username) throws FileNotFoundException, IOException {
 		FileReader fileReader = new FileReader(new File(pathUserPass));
-		List<UserPassObject> lineaList = new ArrayList<>();
+		List<UserPassObject> listUser = new ArrayList<>();
 		BufferedReader br = new BufferedReader(fileReader);
 		String linea = br.readLine();
 		while (linea != null) {
 			List<String> lista = Arrays.stream(linea.split(",")).collect(Collectors.toList());
-			lineaList.add(new UserPassObject(lista.get(0), lista.get(1)));
+			listUser.add(new UserPassObject(lista.get(0), lista.get(1)));
 			linea = br.readLine();
 		}
-		return lineaList;
+		for (UserPassObject x : listUser) {
+			if (x.getUsername().equals(username)) {
+				return x.getPassword();
+			}
+		}
+		return null;
 	}
 }

@@ -18,8 +18,6 @@ import org.xml.sax.SAXException;
 
 public class ReadXMLDomParser {
 
-	// private static final String FILENAME =
-	// "src"+File.separator+"configuration"+File.separator+"config.xml";
 	private static final String FILENAME = "src" + File.separator + "main" + File.separator + "java" + File.separator
 			+ "XMLconfig" + File.separator + "config.xml";
 	private static Configuration configuration;
@@ -32,8 +30,6 @@ public class ReadXMLDomParser {
 		ReadXMLDomParser.configuration = configuration;
 	}
 
-	// @SuppressWarnings("unused")
-	// public static void main(String[] args) throws NumberFormatException {
 	public void readXML() {
 		List<String> listTypes = new ArrayList<>();
 
@@ -52,21 +48,15 @@ public class ReadXMLDomParser {
 
 			doc.getDocumentElement().normalize();
 
-			System.out.println("Root Element : " + doc.getDocumentElement().getNodeName());
-			System.out.println("------------------------------");
-
 			// get <staff>
 			NodeList list = doc.getElementsByTagName("Configuration");
 			Node node = list.item(0);
 			Element element = (Element) node;
 
 			// get text
+
 			String idioma = element.getElementsByTagName("Idioma").item(0).getTextContent();
 			NodeList tiposNodeList = element.getElementsByTagName("TipoPregunta");
-			// String tipo1 = tiposNodeList.item(0).getTextContent();
-			// String tipo2 = tiposNodeList.item(1).getTextContent();
-			// String tipo3 = tiposNodeList.item(2).getTextContent();
-			// String tipo4 = tiposNodeList.item(3).getTextContent();
 			String timeout = element.getElementsByTagName("TimeoutPreguntas").item(0).getTextContent();
 			String nummax = element.getElementsByTagName("NumMaxPreguntas").item(0).getTextContent();
 			String ruta = element.getElementsByTagName("RutaXMLKahoots").item(0).getTextContent();
