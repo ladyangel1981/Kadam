@@ -106,7 +106,6 @@ public class KadammManagement extends JFrame {
 		for (Kahoot element : kahootList) {
 			if (contador < kahootList.size()) {
 				listModelKahoot.add(contador, element.getTitle());
-				indexKahoot = element.getKahootId();
 			}
 			contador++;
 		}
@@ -117,6 +116,12 @@ public class KadammManagement extends JFrame {
 			public void valueChanged(ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
 					selected = list.getSelectedValue().toString();
+					for(Kahoot element : kahootList) {
+						if(element.getTitle().equalsIgnoreCase(selected)) {
+							indexKahoot = element.getKahootId();
+							System.out.println(indexKahoot);
+						}
+					}
 					btnNewButton_1.setEnabled(true);
 				}
 			}

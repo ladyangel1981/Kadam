@@ -44,7 +44,7 @@ public class Login extends JFrame {
 	private JPasswordField passwordField;
 	private static String pathUserPass = "src" + File.separator + "main" + File.separator + "java" + File.separator
 			+ "Utilities" + File.separator + "user_pass";
-
+	private List<UserPassObject> listUser = new ArrayList<>();
 	/**
 	 * Launch the application.
 	 */
@@ -134,7 +134,7 @@ public class Login extends JFrame {
 			@Override
 			public void focusGained(FocusEvent e) {
 				try {
-					List<UserPassObject> listUser = fileReader();
+					listUser = fileReader();
 					for (UserPassObject x : listUser) {
 						if (x.getUsername().equals(textField.getText())) {
 							passwordField.setText(x.getPassword());
@@ -158,6 +158,7 @@ public class Login extends JFrame {
 		contentPane.add(btnLogin);
 		btnLogin.addActionListener(new ActionListener() {
 
+			@SuppressWarnings("unlikely-arg-type")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				UserDao userDao = new UserDao();
@@ -171,12 +172,13 @@ public class Login extends JFrame {
 						if (user.getPassword().equals(String.valueOf(passwordField.getPassword()))) {
 							if (chckbxRememberMyPassword.isSelected()) {
 								try {
-
-									File filesavePass = new File(pathUserPass);
-									FileWriter fw = new FileWriter(filesavePass, true);
-									fw.write(textField.getText() + "," + String.valueOf(passwordField.getPassword())
-											+ "\n");
-									fw.close();
+									if(!listUser.contains(textField.getText())) {
+										File filesavePass = new File(pathUserPass);
+										FileWriter fw = new FileWriter(filesavePass, true);
+										fw.write(textField.getText() + "," + String.valueOf(passwordField.getPassword())
+												+ "\r\n");
+										fw.close();
+									}
 								} catch (IOException e1) {
 									e1.printStackTrace();
 								}

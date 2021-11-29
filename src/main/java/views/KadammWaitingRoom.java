@@ -52,8 +52,6 @@ public class KadammWaitingRoom extends JFrame {
 			public void run() {
 				try {
 					KadammWaitingRoom frame = new KadammWaitingRoom();
-					ServerTestMain serverTestMain = new ServerTestMain();
-					serverTestMain.main(null);
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -114,6 +112,7 @@ public class KadammWaitingRoom extends JFrame {
 							timer.cancel();
 							KadammCompetition kadammCompetition = new KadammCompetition(kahootIndex);
 							kadammCompetition.main(kahootIndex);
+						
 							dispose();
 						}
 					}
@@ -124,18 +123,32 @@ public class KadammWaitingRoom extends JFrame {
 		JList list = new JList();
 		DefaultListModel listModelPlayers = new DefaultListModel();
 		server.setIsActive(true);
-		List<String> players = server.getUsers();
-		int contador = 0;
-//		indexKahoot = 0;
-		for (String element : players) {
-			if (contador < players.size()) {
-				listModelPlayers.add(contador, element);
-//				indexKahoot = element.getKahootId();
+		if(btnStartComp.isEnabled()) {
+			if (server.getUsers() != null) {
+				List<String> players = server.getUsers();
+				int contador = 0;
+				for (String element : players) {
+					if (contador < players.size()) {
+						listModelPlayers.add(contador, element);
+					}
+					contador++;
+				}
+				
+			}else {
+				while (btnStartComp.isEnabled()) {
+					List<String> players = server.getUsers();
+					int contador = 0;
+					for (String element : players) {
+						if (contador < players.size()) {
+							listModelPlayers.add(contador, element);
+						}
+						contador++;
+					}
+				}
 			}
-			contador++;
+			list.setModel(listModelPlayers);
+			scrollPane.setViewportView(list);
 		}
-		list.setModel(listModelPlayers);
-		scrollPane.setViewportView(list);
 
 		try {
 			InetAddress IP = InetAddress.getLocalHost();
@@ -143,7 +156,7 @@ public class KadammWaitingRoom extends JFrame {
 			lblKadamms_1.setHorizontalAlignment(SwingConstants.LEFT);
 			lblKadamms_1.setForeground(new Color(175, 238, 238));
 			lblKadamms_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-			lblKadamms_1.setBounds(12, 35, 136, 35);
+			lblKadamms_1.setBounds(12, 50, 136, 35);
 			contentPane.add(lblKadamms_1);
 		} catch (UnknownHostException e1) {
 			e1.printStackTrace();
