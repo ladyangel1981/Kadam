@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -33,19 +32,29 @@ public class KadammManagement extends JFrame {
 	private static final long serialVersionUID = 9176526853703877107L;
 	private JPanel contentPane;
 	private static String selected;
-	private static long indexKahoot;
-	private JButton btnPlay, btnViewDetail, btnCreateKadam, btnFilterTopic, btnEditTopic;
-	private JLabel lblKadamms, lblTopics, lblChosenTopics;
+	private static Long indexKahoot;
+	private static Long userId;
+	private JButton btnPlay;
+	private JButton btnViewDetail;
+	private JButton btnCreateKadam;
+	private JButton btnFilterTopic;
+	private JButton btnEditTopic;
+	private JLabel lblKadamms;
+	private JLabel lblTopics;
+	private JLabel lblChosenTopics;
 	@SuppressWarnings("rawtypes")
 	private JList jListKahoot, jListChosenTopics, jListTopic;
 	@SuppressWarnings("rawtypes")
-	private DefaultListModel listModelKahoot, listModelChosenTopic;
-	private JScrollPane scrkKadamList, scrlChosenTopic;
+	private DefaultListModel listModelKahoot, listModelChosenTopic, listModelTopic;
+	private JScrollPane scrkKadamList;
+	private JScrollPane scrlChosenTopic;
+	private JScrollPane scrlTopics;
 
 	/**
 	 * Launch the application.
 	 */
-	public void main(String[] args) {
+	public void main(Long userID) {
+		userId = userID;
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
@@ -87,16 +96,16 @@ public class KadammManagement extends JFrame {
 		scrkKadamList = new JScrollPane();
 		scrkKadamList.setBounds(15, 33, 390, 300);
 		contentPane.add(scrkKadamList);
-		
-		// KAHOOT LIST 
+
+		// KAHOOT LIST
 		jListKahoot = new JList();
 		listModelKahoot = new DefaultListModel();
 		KahootDao kahootDao = new KahootDao();
 		List<Kahoot> kahootList = kahootDao.getAllKahoots();
 		int contador = 0;
-		indexKahoot = 0;
+		indexKahoot = 0L;
 		for (Kahoot element : kahootList) {
-			if (contador < kahootList.size()) {
+			if (contador < kahootList.size() && element.getUser().getUserId() == userId) {
 				listModelKahoot.add(contador, element.getTitle());
 			}
 			contador++;
@@ -110,47 +119,52 @@ public class KadammManagement extends JFrame {
 				if (!e.getValueIsAdjusting()) {
 					selected = jListKahoot.getSelectedValue().toString();
 					indexKahoot = kahootDao.getKahootByTitle(selected).getKahootId();
-					
+
 					// CHOSEN TOPICS LIST
-					
-					jListChosenTopics = new JList();
-					listModelChosenTopic = new DefaultListModel();
-					List<Topic> topicChosenList = new ArrayList<>();
-					for (Kahoot element : kahootList) {
-						if (element.getKahootId() == indexKahoot) {
-							element.getTopics().stream().forEach(topicChosenList::add);
-							break;
-						}
-					}
-					for (int i = 0; i < topicChosenList.size(); i++) {
-						listModelChosenTopic.add(i, topicChosenList.stream().map(Topic::getTopic));
-					}
-					jListChosenTopics.setModel(listModelChosenTopic);
-					scrlChosenTopic.setViewportView(jListChosenTopics);
-					
+
+//					jListChosenTopics = new JList();
+//					listModelChosenTopic = new DefaultListModel();
+//					List<Topic> topicChosenList = new ArrayList<>();
+//					for (Kahoot element : kahootList) {
+//						System.out.println("element: " + element);
+//						if (element.getKahootId() == indexKahoot) {
+//							TopicDao topicDao = new TopicDao();
+//							for (Topic topic : topicDao.geelement.getTopics()) {
+//
+//								System.out.println("topic: " + topic);
+//								topicChosenList.add(topic);
+//							}
+//							break;
+//						}
+//					}
+//					for (int i = 0; i < topicChosenList.size(); i++) {
+//						listModelChosenTopic.add(i, topicChosenList.stream().map(Topic::getTopic));
+//					}
+//					jListChosenTopics.setModel(listModelChosenTopic);
+//					scrlChosenTopic.setViewportView(jListChosenTopics);
+
 					btnPlay.setEnabled(true);
 				}
 			}
 		});
-		
+
 		// TOPICS LIST
-		
+
 		lblTopics = new JLabel("Topics");
 		lblTopics.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblTopics.setForeground(new Color(175, 238, 238));
 		lblTopics.setBounds(420, 11, 38, 17);
 		contentPane.add(lblTopics);
-		
-		JScrollPane scrlTopics = new JScrollPane();
+
+		scrlTopics = new JScrollPane();
 		scrlTopics.setBounds(420, 33, 225, 135);
 		contentPane.add(scrlTopics);
 
 		jListTopic = new JList();
-		DefaultListModel listModelTopic = new DefaultListModel();
+		listModelTopic = new DefaultListModel();
 		TopicDao topicDao = new TopicDao();
 		List<Topic> topicList = topicDao.getAllTopics();
 		int contadorT = 0;
-		long indexTopic = 0;
 		for (Topic element : topicList) {
 			if (contadorT < topicList.size()) {
 				listModelTopic.add(contadorT, element.getTopic());
@@ -159,19 +173,22 @@ public class KadammManagement extends JFrame {
 		}
 		jListTopic.setModel(listModelTopic);
 		scrlTopics.setViewportView(jListTopic);
-		
+
 		jListTopic.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if (!e.getValueIsAdjusting()) {
 
-		
+				}
+			}
+		});
+
 		lblChosenTopics = new JLabel("Chosen Topics");
 		lblChosenTopics.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblChosenTopics.setForeground(new Color(175, 238, 238));
 		lblChosenTopics.setBounds(420, 178, 85, 17);
 		contentPane.add(lblChosenTopics);
-		
+
 		scrlChosenTopic = new JScrollPane();
 		scrlChosenTopic.setBounds(420, 198, 225, 135);
 		contentPane.add(scrlChosenTopic);
@@ -190,7 +207,7 @@ public class KadammManagement extends JFrame {
 				dispose();
 			}
 		});
-		
+
 		btnCreateKadam = new JButton("Create Kadamm");
 		btnCreateKadam.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnCreateKadam.setBounds(15, 345, 190, 27);
@@ -198,9 +215,11 @@ public class KadammManagement extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				KadammCreator kadammCreator = new KadammCreator();
-				kadammCreator.main(null);
+				kadammCreator.main(userId);
+
 			}
 		});
+
 		contentPane.add(btnCreateKadam);
 
 		btnFilterTopic = new JButton("Filter by Topic");
@@ -212,7 +231,7 @@ public class KadammManagement extends JFrame {
 		btnEditTopic.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnEditTopic.setBounds(420, 382, 225, 27);
 		contentPane.add(btnEditTopic);
-		
+
 		btnViewDetail = new JButton("View Detail");
 		btnViewDetail.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnViewDetail.setBounds(217, 345, 190, 27);

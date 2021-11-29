@@ -44,6 +44,7 @@ public class Login extends JFrame {
 	private JPasswordField passwordField;
 	private static String pathUserPass = "src" + File.separator + "main" + File.separator + "java" + File.separator
 			+ "Utilities" + File.separator + "user_pass";
+	private static Long userID;
 
 	/**
 	 * Launch the application.
@@ -175,8 +176,9 @@ public class Login extends JFrame {
 							e1.printStackTrace();
 						}
 					}
+					userID = user.getUserId();
 					KadammManagement kadammManagemente = new KadammManagement();
-					kadammManagemente.main(null);
+					kadammManagemente.main(userID);
 					dispose();
 				} else {
 					new ErrorControl("Password incorrect", "Warning");

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import HibernateUtils.HibernateUtil;
 import Objects.Kahoot;
@@ -149,7 +150,9 @@ public class KahootDao {
 			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
 
-			kahoot = (Kahoot) session.createQuery("from Kahoot where title = " + title);
+			Query query = session.createQuery("from Kahoot where title = :title");
+			query.setString("title", title);
+			kahoot = (Kahoot) query.uniqueResult();
 
 			transaction.commit();
 		} catch (Exception e) {
@@ -166,4 +169,34 @@ public class KahootDao {
 		return kahoot;
 	}
 
+//	public void saveKahootTopic(List<Topic> listTopic, Long id) {
+//		Transaction transaction = null;
+//		Session session = null;
+//
+//		Kahoot kahoot = null;
+//
+//		try {
+//			session = HibernateUtil.getSessionFactory().openSession();
+//			transaction = session.beginTransaction();
+////			
+////			Query query = session.createQuery("insert into from Kahoot_topic where title = :title");
+////			query.setString("title", title);
+//
+//			session.save(kahoot);
+//
+//			transaction.commit();
+//
+//		} catch (Exception e) {
+//			if (transaction != null) {
+//				transaction.rollback();
+//			}
+//			e.printStackTrace();
+//		} finally {
+//			if (session != null) {
+//				session.close();
+//			}
+//		}
+//
+//	}
+//
 }
