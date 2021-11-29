@@ -7,7 +7,7 @@
     <TipoPregunta>Pregunta Abierta</TipoPregunta>
     <TipoPregunta>Escrita</TipoPregunta>
   </TiposPreguntas>
-  <TimeoutPreguntas>30</TimeoutPreguntas>
+  <TimeoutPreguntas>5</TimeoutPreguntas>
   <NumMaxPreguntas>15</NumMaxPreguntas>
   <RutaXMLKahoots>"src"+File.separator+"kahootXML"</RutaXMLKahoots>
   <CountdownWaitingroom>10</CountdownWaitingroom>

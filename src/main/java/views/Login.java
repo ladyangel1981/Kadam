@@ -46,6 +46,8 @@ public class Login extends JFrame {
 			+ "Utilities" + File.separator + "user_pass";
 	private static Long userID;
 
+	private List<UserPassObject> listUser = new ArrayList<>();
+
 	/**
 	 * Launch the application.
 	 */
@@ -136,6 +138,12 @@ public class Login extends JFrame {
 			public void focusGained(FocusEvent e) {
 				try {
 					passwordField.setText(fileReader(textField.getText()));
+					listUser = fileReader();
+					for (UserPassObject x : listUser) {
+						if (x.getUsername().equals(textField.getText())) {
+							passwordField.setText(x.getPassword());
+						}
+					}
 				} catch (IOException e1) {
 					new ErrorControl(e1.toString(), "ERROR");
 				}
@@ -154,6 +162,7 @@ public class Login extends JFrame {
 		contentPane.add(btnLogin);
 		btnLogin.addActionListener(new ActionListener() {
 
+			@SuppressWarnings("unlikely-arg-type")
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				UserDao userDao = new UserDao();
