@@ -89,7 +89,8 @@ public class Answer {
 
 	@Override
 	public String toString() {
-		return "Answer [ ID = " + answerId + ", Text = " + answerText + ", Is Correct = " + isCorrect + " ]";
+		return "Answer [ Text = " + answerText + ", Is correct = " + isCorrect + " ]\n";
+//		return "Answer [ Text = " + answerText + ", Is correct = " + isCorrect + ", Question = " + question + "]\n";
 	}
 
 }

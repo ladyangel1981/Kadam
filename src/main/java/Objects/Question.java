@@ -88,7 +88,8 @@ public class Question {
 
 	@Override
 	public String toString() {
-		return "Question [ ID = " + questionId + ", Text = " + questionText + " ]";
+		return "Question [Question = " + questionText + ", Question Type = " + questionType + ", Kahoot = " + kahoot
+				+ ", Answers = " + answers + "]\n";
 	}
 
 }

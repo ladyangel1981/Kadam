@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import Exception.ErrorControl;
 import Objects.Kahoot;
 import Objects.Topic;
 import modelDAO.KahootDao;
@@ -33,7 +34,7 @@ public class KadammManagement extends JFrame {
 	private JPanel contentPane;
 	private static String selected;
 	private static Long indexKahoot;
-	private static Long userId;
+	private static Long userId = 0L;
 	private JButton btnPlay;
 	private JButton btnViewDetail;
 	private JButton btnCreateKadam;
@@ -102,14 +103,24 @@ public class KadammManagement extends JFrame {
 		listModelKahoot = new DefaultListModel();
 		KahootDao kahootDao = new KahootDao();
 		List<Kahoot> kahootList = kahootDao.getAllKahoots();
-		int contador = 0;
-		indexKahoot = 0L;
-		for (Kahoot element : kahootList) {
-			if (contador < kahootList.size() && element.getUser().getUserId() == userId) {
-				listModelKahoot.add(contador, element.getTitle());
+		if (kahootList.stream().filter(kahoot -> kahoot.getUser().getUserId() == userId).findAny()
+				.orElse(null) != null) {
+			int contador = 0;
+			indexKahoot = 0L;
+//			boolean flag = true;
+			for (Kahoot element : kahootList) {
+				if (contador < kahootList.size() && element.getUser().getUserId() == userId) {
+					listModelKahoot.add(contador, element.getTitle());
+//					flag = true;
+				} else {
+//					flag = false;
+				}
+				contador++;
 			}
-			contador++;
+		} else {
+			new ErrorControl("Wanna create your first Kadamm!, go to Create Kadam and start your journey.", "INFO");
 		}
+
 		jListKahoot.setModel(listModelKahoot);
 		scrkKadamList.setViewportView(jListKahoot);
 
@@ -225,16 +236,19 @@ public class KadammManagement extends JFrame {
 		btnFilterTopic = new JButton("Filter by Topic");
 		btnFilterTopic.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnFilterTopic.setBounds(420, 345, 225, 27);
+		btnFilterTopic.setEnabled(false);
 		contentPane.add(btnFilterTopic);
 
 		btnEditTopic = new JButton("Edit Topics");
 		btnEditTopic.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnEditTopic.setBounds(420, 382, 225, 27);
+		btnEditTopic.setEnabled(false);
 		contentPane.add(btnEditTopic);
 
 		btnViewDetail = new JButton("View Detail");
 		btnViewDetail.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnViewDetail.setBounds(217, 345, 190, 27);
+		btnViewDetail.setEnabled(false);
 		contentPane.add(btnViewDetail);
 
 	}

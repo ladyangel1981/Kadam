@@ -1,6 +1,5 @@
 package views;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import Objects.Answer;
@@ -149,25 +148,55 @@ public class HibernateApp {
 		for (QuestionType element : questionTypeDao.getAllQuestionsType()) {
 			System.out.println(element);
 		}
-		System.out.println(questionDao.getAllQuestionsByKahootID(1L));
-		answerDao.getAnswerById(1);
-		List<Topic> listTopic = new ArrayList<>();
-		listTopic = topicDao.getAllTopics();
-
-		kahootDao.getKahootByTitle("Peliculas infantiles y superheroes");
-		Kahoot kahoot = kahootDao.getKahootById(1L);
-		System.out.println(kahoot);
-		List<Topic> chosenList = new ArrayList<>();
-		for (Topic element : listTopic) {
-			if (element.getTopicId() == 1L || element.getTopicId() == 5L || element.getTopicId() == 6L) {
-				chosenList.add(element);
-				System.out.println("id" + element.getTopicId());
-			}
-		}
-		System.out.println(chosenList);
-		kahoot.setTopics(chosenList);
-		kahootDao.updateKahoot(kahoot);
+//		System.out.println(questionDao.getAllQuestionsByKahootID(1L));
+//		answerDao.getAnswerById(1);
+//		List<Topic> listTopic = new ArrayList<>();
+//		listTopic = topicDao.getAllTopics();
+//
+//		kahootDao.getKahootByTitle("Peliculas infantiles y superheroes");
+//		Kahoot kahoot = kahootDao.getKahootById(1L);
+//		System.out.println(kahoot);
+//		List<Topic> chosenList = new ArrayList<>();
+//		for (Topic element : listTopic) {
+//			if (element.getTopicId() == 1L || element.getTopicId() == 5L || element.getTopicId() == 6L) {
+//				chosenList.add(element);
+//				System.out.println("id" + element.getTopicId());
+//			}
+//		}
+//		System.out.println(chosenList);
+//		kahoot.setTopics(chosenList);
+//		kahootDao.updateKahoot(kahoot);
 		// kahootDao.saveKahoot(kahoot);
+
+		Answer answer = new Answer();
+		answer = answerDao.getAnswerById(3L);
+		answer.setCorrect(false);
+		answerDao.updateAnswer(answer);
+
+		Answer answer1 = new Answer();
+		answer1 = answerDao.getAnswerById(4L);
+		answer1.setCorrect(false);
+		answerDao.updateAnswer(answer1);
+
+		Answer answer2 = new Answer();
+		answer2 = answerDao.getAnswerById(8L);
+		answer2.setCorrect(true);
+		answerDao.updateAnswer(answer2);
+
+		Answer answer3 = new Answer();
+		answer3 = answerDao.getAnswerById(12L);
+		answer3.setCorrect(true);
+		answerDao.updateAnswer(answer3);
+
+		Answer answer4 = new Answer();
+		answer4 = answerDao.getAnswerById(15L);
+		answer4.setCorrect(false);
+		answerDao.updateAnswer(answer4);
+
+		Answer answer5 = new Answer();
+		answer5 = answerDao.getAnswerById(16L);
+		answer5.setCorrect(true);
+		answerDao.updateAnswer(answer5);
 
 	}
 

@@ -178,8 +178,10 @@ public class Kahoot {
 
 	@Override
 	public String toString() {
-		return "Kahoot [ ID = " + kahootId + ", Title = " + title + ", Description = " + description + ", Language = "
-				+ language + ", Played = " + timePlays + ", Favorite = " + isFavorite + " ]";
+		return "Kahoot [ Title = " + title + ", Description = " + description + ", Language = " + language
+				+ ", Image = " + image + ", Time Played = " + timePlays + ", Total Players = " + totalPlayers
+				+ ", Is Favorite = " + isFavorite + ", Tags = " + topics + ", User = " + user + ", Questions = "
+				+ questions + "]";
 	}
 
 }

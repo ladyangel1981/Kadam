@@ -138,7 +138,6 @@ public class Login extends JFrame {
 			public void focusGained(FocusEvent e) {
 				try {
 					passwordField.setText(fileReader(textField.getText()));
-					listUser = fileReader();
 					for (UserPassObject x : listUser) {
 						if (x.getUsername().equals(textField.getText())) {
 							passwordField.setText(x.getPassword());
@@ -186,6 +185,7 @@ public class Login extends JFrame {
 						}
 					}
 					userID = user.getUserId();
+					System.out.println("ID: " + userID);
 					KadammManagement kadammManagemente = new KadammManagement();
 					kadammManagemente.main(userID);
 					dispose();
