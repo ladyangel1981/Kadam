@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import HibernateUtils.HibernateUtil;
 import Objects.Answer;
@@ -36,8 +37,8 @@ public class AnswerDao {
 		return answer;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Answer> getAllAnswers() {
+	@SuppressWarnings({ "unchecked", "rawtypes", "deprecation" })
+	public List<Answer> getAllAnswersByQuestionId(Long id) {
 		Transaction transaction = null;
 		Session session = null;
 		List<Answer> answers = new ArrayList<Answer>();
@@ -45,9 +46,11 @@ public class AnswerDao {
 		try {
 			session = HibernateUtil.getSessionFactory().openSession();
 			transaction = session.beginTransaction();
-
-			answers = session.createQuery("from Answer").list();
-
+			
+			Query query = session.createQuery("from Answer where question_id = :id");
+			query.setLong("id", id);			
+			
+			answers = query.list();
 			transaction.commit();
 
 		} catch (Exception e) {

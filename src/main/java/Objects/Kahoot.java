@@ -65,13 +65,10 @@ public class Kahoot {
 		super();
 	}
 
-	public Kahoot(String title, String description, String language, String image, boolean isFavorite) {
+	public Kahoot(String title, String language) {
 		super();
 		this.title = title;
-		this.description = description;
 		this.language = language;
-		this.image = image;
-		this.isFavorite = isFavorite;
 	}
 
 	public long getKahootId() {

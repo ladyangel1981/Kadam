@@ -10,4 +10,5 @@
   <TimeoutPreguntas>30</TimeoutPreguntas>
   <NumMaxPreguntas>15</NumMaxPreguntas>
   <RutaXMLKahoots>"src"+File.separator+"kahootXML"</RutaXMLKahoots>
+  <CountdownWaitingroom>10</CountdownWaitingroom>
 </Configuration>
