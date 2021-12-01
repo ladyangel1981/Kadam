@@ -47,6 +47,7 @@ public class KadammCompetition extends JFrame {
 	private static AnswerDao answerDao = new AnswerDao();
 	private String question;
 	private static int cont = 0;
+	private static int contador = 0;
 	private JLabel lblNewLabel;
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;

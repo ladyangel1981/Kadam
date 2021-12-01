@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,11 +23,8 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import Objects.Kahoot;
 import ServerConfig.Server;
-import ServerConfig.ServerTestMain;
 import XMLconfig.ReadXMLDomParser;
-import modelDAO.KahootDao;
 
 public class KadammWaitingRoom extends JFrame {
 
@@ -112,7 +108,7 @@ public class KadammWaitingRoom extends JFrame {
 							timer.cancel();
 							KadammCompetition kadammCompetition = new KadammCompetition(kahootIndex);
 							kadammCompetition.main(kahootIndex);
-						
+
 							dispose();
 						}
 					}
@@ -123,7 +119,7 @@ public class KadammWaitingRoom extends JFrame {
 		JList list = new JList();
 		DefaultListModel listModelPlayers = new DefaultListModel();
 		server.setIsActive(true);
-		if(btnStartComp.isEnabled()) {
+		if (btnStartComp.isEnabled()) {
 			if (server.getUsers() != null) {
 				List<String> players = server.getUsers();
 				int contador = 0;
@@ -133,8 +129,8 @@ public class KadammWaitingRoom extends JFrame {
 					}
 					contador++;
 				}
-				
-			}else {
+
+			} else {
 				while (btnStartComp.isEnabled()) {
 					List<String> players = server.getUsers();
 					int contador = 0;
