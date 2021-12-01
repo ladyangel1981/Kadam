@@ -5,8 +5,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -27,8 +25,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import Exception.ErrorControl;
 import Objects.Answer;
@@ -47,8 +43,6 @@ public class KadammCreator extends JFrame {
 	private static final long serialVersionUID = -7760529119031318954L;
 	private JPanel contentPane;
 	private JTextField txtTitle;
-	private static long indexTopic;
-	private static List<String> selectedTopics = new ArrayList<>();
 	private JTextField txtQuestion;
 	private JTextField txtAnswer1;
 	private JTextField txtAnswer2;
@@ -57,7 +51,7 @@ public class KadammCreator extends JFrame {
 	private JLabel lblTitle, lblListQuestion, lblNewQuestion, lblTopics, lblHowtoReply, lblCorrecta, lblAnswer;
 	private JScrollPane scrPaneQuestion, scrPaneTags;
 	@SuppressWarnings("rawtypes")
-	private JList jListQuestion, listTopic;
+	private JList listQuestions, listTopic;
 	@SuppressWarnings("rawtypes")
 	private DefaultListModel listModelTopic;
 	@SuppressWarnings("rawtypes")
@@ -65,11 +59,11 @@ public class KadammCreator extends JFrame {
 	private JButton btnSaveKadam, btnSaveQuestion;
 	private JCheckBox chkBoxAnswer1, chkBoxAnswer2, chkBoxAnswer3, chkBoxAnswer4;
 	private static Long userID;
-	boolean flagSave = true;
+	boolean flagSave = false;
+	boolean flagSave1 = false;
+	boolean flagSave2 = false;
+	boolean flagSave3 = false;
 	private static int contadorQuestion = 0;
-	private KahootDao kahootDao = new KahootDao();
-	private QuestionDao questionDao = new QuestionDao();
-	private AnswerDao answerDao = new AnswerDao();
 	private List<Answer> listAnswer = new ArrayList<>();
 	private List<Question> listQuestion = new ArrayList<>();
 
@@ -134,9 +128,9 @@ public class KadammCreator extends JFrame {
 		scrPaneQuestion.setBounds(23, 72, 390, 110);
 		contentPane.add(scrPaneQuestion);
 
-		jListQuestion = new JList();
-		jListQuestion.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		scrPaneQuestion.setViewportView(jListQuestion);
+		listQuestions = new JList();
+		listQuestions.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		scrPaneQuestion.setViewportView(listQuestions);
 
 		// NEW QUESTION
 
@@ -171,11 +165,10 @@ public class KadammCreator extends JFrame {
 		TopicDao topicDao = new TopicDao();
 		List<Topic> topicList = topicDao.getAllTopics();
 		int contador = 0;
-		indexTopic = 0;
 		for (Topic element : topicList) {
 			if (contador < topicList.size()) {
 				listModelTopic.add(contador, element.getTopic());
-				indexTopic = element.getTopicId();
+				element.getTopicId();
 			}
 			contador++;
 		}
@@ -199,18 +192,15 @@ public class KadammCreator extends JFrame {
 					chkBoxAnswer2.setEnabled(false);
 					chkBoxAnswer3.setEnabled(false);
 					chkBoxAnswer4.setEnabled(false);
-				}
-				if (chkBoxAnswer2.isSelected()) {
+				} else if (chkBoxAnswer2.isSelected()) {
 					chkBoxAnswer1.setEnabled(false);
 					chkBoxAnswer3.setEnabled(false);
 					chkBoxAnswer4.setEnabled(false);
-				}
-				if (chkBoxAnswer3.isSelected()) {
+				} else if (chkBoxAnswer3.isSelected()) {
 					chkBoxAnswer1.setEnabled(false);
 					chkBoxAnswer2.setEnabled(false);
 					chkBoxAnswer4.setEnabled(false);
-				}
-				if (chkBoxAnswer4.isSelected()) {
+				} else if (chkBoxAnswer4.isSelected()) {
 					chkBoxAnswer1.setEnabled(false);
 					chkBoxAnswer2.setEnabled(false);
 					chkBoxAnswer3.setEnabled(false);
@@ -233,12 +223,13 @@ public class KadammCreator extends JFrame {
 		chkBoxAnswer1 = new JCheckBox("");
 		chkBoxAnswer1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		chkBoxAnswer1.setBounds(625, 213, 21, 21);
-		chkBoxAnswer1.addItemListener(new ItemListener() {
+		chkBoxAnswer1.addActionListener(new ActionListener() {
+
 			@Override
-			public void itemStateChanged(ItemEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				if (txtAnswer1.getText().isEmpty()) {
+					chkBoxAnswer1.setSelected(false);
 					new ErrorControl("Please write an answer", "WARNING");
-					chkBoxAnswer1.setEnabled(false);
 				} else {
 					chkBoxAnswer1.setEnabled(true);
 				}
@@ -249,17 +240,16 @@ public class KadammCreator extends JFrame {
 		chkBoxAnswer2 = new JCheckBox("");
 		chkBoxAnswer2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		chkBoxAnswer2.setBounds(625, 234, 21, 21);
-		chkBoxAnswer2.addItemListener(new ItemListener() {
+		chkBoxAnswer2.addActionListener(new ActionListener() {
 
 			@Override
-			public void itemStateChanged(ItemEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				if (txtAnswer2.getText().isEmpty()) {
+					chkBoxAnswer2.setSelected(false);
 					new ErrorControl("Please write an answer", "WARNING");
-					chkBoxAnswer2.setEnabled(false);
 				} else {
 					chkBoxAnswer2.setEnabled(true);
 				}
-
 			}
 		});
 		contentPane.add(chkBoxAnswer2);
@@ -267,12 +257,13 @@ public class KadammCreator extends JFrame {
 		chkBoxAnswer3 = new JCheckBox("");
 		chkBoxAnswer3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		chkBoxAnswer3.setBounds(625, 255, 21, 21);
-		chkBoxAnswer3.addItemListener(new ItemListener() {
+		chkBoxAnswer3.addActionListener(new ActionListener() {
+
 			@Override
-			public void itemStateChanged(ItemEvent e) {
+			public void actionPerformed(ActionEvent e) {
 				if (txtAnswer3.getText().isEmpty()) {
+					chkBoxAnswer3.setSelected(false);
 					new ErrorControl("Please write an answer", "WARNING");
-					chkBoxAnswer3.setEnabled(false);
 				} else {
 					chkBoxAnswer3.setEnabled(true);
 				}
@@ -283,12 +274,14 @@ public class KadammCreator extends JFrame {
 		chkBoxAnswer4 = new JCheckBox("");
 		chkBoxAnswer4.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		chkBoxAnswer4.setBounds(625, 276, 21, 21);
-		chkBoxAnswer4.addItemListener(new ItemListener() {
+		chkBoxAnswer4.addActionListener(new ActionListener() {
+
 			@Override
-			public void itemStateChanged(ItemEvent e) {
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
 				if (txtAnswer4.getText().isEmpty()) {
+					chkBoxAnswer4.setSelected(false);
 					new ErrorControl("Please write an answer", "WARNING");
-					chkBoxAnswer4.setEnabled(false);
 				} else {
 					chkBoxAnswer4.setEnabled(true);
 				}
@@ -305,88 +298,21 @@ public class KadammCreator extends JFrame {
 		txtAnswer1 = new JTextField();
 		txtAnswer1.setBounds(428, 213, 191, 19);
 		txtAnswer1.setColumns(10);
-		txtAnswer1.getDocument().addDocumentListener(new DocumentListener() {
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				validateInput();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				validateInput();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				validateInput();
-			}
-		});
 		contentPane.add(txtAnswer1);
 
 		txtAnswer2 = new JTextField();
 		txtAnswer2.setColumns(10);
 		txtAnswer2.setBounds(428, 234, 191, 19);
-		txtAnswer2.getDocument().addDocumentListener(new DocumentListener() {
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				validateInput();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				validateInput();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				validateInput();
-			}
-		});
 		contentPane.add(txtAnswer2);
 
 		txtAnswer3 = new JTextField();
 		txtAnswer3.setColumns(10);
 		txtAnswer3.setBounds(428, 255, 191, 19);
-		txtAnswer3.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				validateInput();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				validateInput();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				validateInput();
-			}
-		});
 		contentPane.add(txtAnswer3);
 
 		txtAnswer4 = new JTextField();
 		txtAnswer4.setColumns(10);
 		txtAnswer4.setBounds(428, 276, 191, 19);
-		txtAnswer4.getDocument().addDocumentListener(new DocumentListener() {
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				validateInput();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				validateInput();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				validateInput();
-			}
-		});
 		contentPane.add(txtAnswer4);
 
 		// BUTTONS
@@ -397,32 +323,43 @@ public class KadammCreator extends JFrame {
 		btnSaveQuestion.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				flagSave = false;
 				if (txtQuestion.getText().isEmpty()) {
 					new ErrorControl("Please write a question", "WARNING");
-					flagSave = false;
+					flagSave1 = false;
 				} else {
-					flagSave = true;
+					flagSave1 = true;
 				}
-				if (!validateInput()) {
-					flagSave = false;
+				if ((txtAnswer1.getText().isEmpty() && txtAnswer2.getText().isEmpty() && txtAnswer3.getText().isEmpty())
+						|| (txtAnswer1.getText().isEmpty() && txtAnswer2.getText().isEmpty()
+								&& txtAnswer4.getText().isEmpty())
+						|| (txtAnswer1.getText().isEmpty() && txtAnswer3.getText().isEmpty()
+								&& txtAnswer4.getText().isEmpty())
+						|| (txtAnswer2.getText().isEmpty() && txtAnswer3.getText().isEmpty()
+								&& txtAnswer4.getText().isEmpty())) {
+					new ErrorControl("At least each question needs minimun 2 optional answers", "WARNING");
+					flagSave2 = false;
 				} else {
-					flagSave = true;
+					flagSave2 = true;
 				}
 				if (!chkBoxAnswer1.isSelected() && !chkBoxAnswer2.isSelected() && !chkBoxAnswer3.isSelected()
 						&& !chkBoxAnswer4.isSelected()) {
 					new ErrorControl("At least one answer must be corrected.", "WARNING");
-					flagSave = false;
+					flagSave3 = false;
 				} else {
+					flagSave3 = true;
+				}
+				if (flagSave1 && flagSave2 && flagSave3) {
 					flagSave = true;
 				}
 				if (flagSave) {
-					QuestionDao questionDao = new QuestionDao();
-					Question question = new Question();
-					question.setQuestionText(txtQuestion.getText());
+					listModelQuestion.add(contadorQuestion, txtQuestion.getText());
+					listQuestions.setModel(listModelQuestion);
+					scrPaneQuestion.setViewportView(listQuestions);
+					// String questionText
+					listQuestion.add(new Question(txtQuestion.getText()));
 
 					// String answerText, Question question, boolean isCorrect
-
 					boolean corrected = true;
 					if (!txtAnswer1.getText().isEmpty()) {
 						if (chkBoxAnswer1.isSelected()) {
@@ -430,7 +367,7 @@ public class KadammCreator extends JFrame {
 						} else {
 							corrected = false;
 						}
-						question.getAnswers().add(new Answer(txtAnswer1.getText(), question, corrected));
+						listAnswer.add(new Answer(txtAnswer1.getText(), listQuestion.get(contadorQuestion), corrected));
 					}
 					if (!txtAnswer2.getText().isEmpty()) {
 						if (chkBoxAnswer2.isSelected()) {
@@ -438,7 +375,7 @@ public class KadammCreator extends JFrame {
 						} else {
 							corrected = false;
 						}
-						question.getAnswers().add(new Answer(txtAnswer2.getText(), question, corrected));
+						listAnswer.add(new Answer(txtAnswer2.getText(), listQuestion.get(contadorQuestion), corrected));
 					}
 					if (!txtAnswer3.getText().isEmpty()) {
 						if (chkBoxAnswer3.isSelected()) {
@@ -446,7 +383,7 @@ public class KadammCreator extends JFrame {
 						} else {
 							corrected = false;
 						}
-						question.getAnswers().add(new Answer(txtAnswer3.getText(), question, corrected));
+						listAnswer.add(new Answer(txtAnswer3.getText(), listQuestion.get(contadorQuestion), corrected));
 					}
 					if (!txtAnswer4.getText().isEmpty()) {
 						if (chkBoxAnswer4.isSelected()) {
@@ -454,39 +391,17 @@ public class KadammCreator extends JFrame {
 						} else {
 							corrected = false;
 						}
-						question.getAnswers().add(new Answer(txtAnswer4.getText(), question, corrected));
-//						listAnswer.add(new Answer();
+						listAnswer.add(new Answer(txtAnswer4.getText(), listQuestion.get(contadorQuestion), corrected));
 					}
-
-					// String questionText
-
-					Kahoot kahoot = new Kahoot(txtTitle.getText(), "ES");
-					UserDao userDao = new UserDao();
-					kahoot.setUser(userDao.getUserById(userID));
-					question.setKahoot(kahoot);
-					QuestionTypeDao questionTypeDao = new QuestionTypeDao();
-					question.setQuestionType(questionTypeDao.getQuestionTypeById(1L));
-					question.setAnswers(listAnswer);
-					listQuestion.add(question);
-					kahoot.setQuestions(listQuestion);
-					listModelQuestion.add(contadorQuestion, question.getQuestionText());
-					jListQuestion.setModel(listModelQuestion);
-					scrPaneQuestion.setViewportView(jListQuestion);
-					listAnswer = new ArrayList<>();
 					contadorQuestion++;
-					System.out.println("Contador question: " + contadorQuestion);
-					System.out.println("kahoot: " + kahoot);
-					System.out.println("Question" + question);
-					System.out.println("list Q: " + listQuestion);
-				}
-				int reply = JOptionPane.showConfirmDialog(null, "Want to add another question?", "INFO",
-						JOptionPane.YES_NO_OPTION);
-				if (reply == JOptionPane.YES_OPTION) {
-					clean();
-				} else {
-					clean();
-					btnSaveKadam.setEnabled(true);
-					btnSaveQuestion.setEnabled(false);
+					int reply = JOptionPane.showConfirmDialog(null, "Want to add another question?", "INFO",
+							JOptionPane.YES_NO_OPTION);
+					if (reply == JOptionPane.YES_OPTION) {
+						clean();
+					} else {
+						btnSaveKadam.setEnabled(true);
+						btnSaveQuestion.setEnabled(false);
+					}
 				}
 			}
 		});
@@ -499,23 +414,25 @@ public class KadammCreator extends JFrame {
 				if (txtTitle.getText().isEmpty()) {
 					new ErrorControl("Title must be filled", "ERROR");
 				} else {
-//					kahootDao.saveKahoot(kahoot);
+					Kahoot kahoot = new Kahoot(txtTitle.getText(), "ES");
+					UserDao userDao = new UserDao();
+					KahootDao kahootDao = new KahootDao();
+					kahoot.setUser(userDao.getUserById(userID));
+					kahootDao.saveKahoot(kahoot);
+					QuestionDao questionDao = new QuestionDao();
+					QuestionTypeDao questionTypeDao = new QuestionTypeDao();
+					AnswerDao answerDao = new AnswerDao();
 					for (Question element : listQuestion) {
-						System.out.println("pregunta: " + element.getQuestionText());
-//						questionDao.saveQuestion(element);
-						for (int i = 0; i < element.getAnswers().size(); i++) {
-							System.out.println("size: " + element.getAnswers().size());
-							if (element.getQuestionText()
-									.equals(element.getAnswers().get(i).getQuestion().getQuestionText())) {
-								listAnswer.add(element.getAnswers().get(i));
-								System.out.println("Answer: " + element.getAnswers().get(i));
-								System.out.println(listAnswer);
-								// answerDao.saveAnswer(answer);
-							}
-						}
+						element.setQuestionType(questionTypeDao.getQuestionTypeById(1L));
+						element.setKahoot(kahoot);
+						questionDao.saveQuestion(element);
+					}
+					for (Answer answerE : listAnswer) {
+						answerDao.saveAnswer(answerE);
 					}
 
 				}
+				dispose();
 			}
 		});
 		btnSaveKadam.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -538,15 +455,7 @@ public class KadammCreator extends JFrame {
 		chkBoxAnswer3.setEnabled(true);
 		chkBoxAnswer4.setSelected(false);
 		chkBoxAnswer4.setEnabled(true);
+
 	}
 
-	protected boolean validateInput() {
-		if (txtAnswer1.getText().isEmpty() && txtAnswer2.getText().isEmpty()) {
-			flagSave = false;
-			new ErrorControl("At least each question needs minimun 2 optional answers", "WARNING");
-		} else {
-			flagSave = true;
-		}
-		return flagSave;
-	}
 }

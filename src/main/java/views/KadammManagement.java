@@ -54,13 +54,13 @@ public class KadammManagement extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public void main(Long userID) {
+	public static void main(Long userID) {
 		userId = userID;
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					KadammManagement frame = new KadammManagement();
+					KadammManagement frame = new KadammManagement(userId);
 					frame.setLocationRelativeTo(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -74,7 +74,7 @@ public class KadammManagement extends JFrame {
 	 * Create the frame.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public KadammManagement() {
+	public KadammManagement(Long userId) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("KADAMM MANAGEMENT");
 		ImageIcon img = new ImageIcon("src" + File.separator + "main" + File.separator + "java" + File.separator
@@ -107,15 +107,12 @@ public class KadammManagement extends JFrame {
 				.orElse(null) != null) {
 			int contador = 0;
 			indexKahoot = 0L;
-//			boolean flag = true;
 			for (Kahoot element : kahootList) {
 				if (contador < kahootList.size() && element.getUser().getUserId() == userId) {
 					listModelKahoot.add(contador, element.getTitle());
-//					flag = true;
-				} else {
-//					flag = false;
+					contador++;
 				}
-				contador++;
+
 			}
 		} else {
 			new ErrorControl("Wanna create your first Kadamm!, go to Create Kadam and start your journey.", "INFO");

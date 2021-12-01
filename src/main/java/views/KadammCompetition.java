@@ -48,6 +48,9 @@ public class KadammCompetition extends JFrame {
 	private String question;
 	private static int cont = 0;
 	private static int contador = 0;
+	private JLabel lblNewLabel;
+	private JLabel lblNewLabel_1;
+	private JLabel lblNewLabel_2;
 
 	/**
 	 * Launch the application.
@@ -93,11 +96,11 @@ public class KadammCompetition extends JFrame {
 		flowLayout.setHgap(20);
 		panelPrincipal.add(panelSuperior, BorderLayout.NORTH);
 		panelSuperior.setBackground(Color.decode("#374151"));
-		
+
 		Long kahootIndex = indexKahoot;
 		questionList = questionDao.getAllQuestionsByKahootID(kahootIndex);
 		question = questionList.get(cont).getQuestionText();
-		
+
 		questionLabel = new JLabel(question); // Entre parentesi va questionText
 		questionLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		questionLabel.setForeground(new Color(175, 238, 238));
@@ -110,43 +113,95 @@ public class KadammCompetition extends JFrame {
 		panelPrincipal.add(panelInferior, BorderLayout.SOUTH);
 		panelInferior.setBackground(Color.decode("#374151"));
 
+		timerJLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
+		timerJLabel.setForeground(new Color(175, 238, 238));
+		panelInferior.add(timerJLabel);
+
+		lblNewLabel_2 = new JLabel("1\u00BA: " + "first" + "   ");
+		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_2.setForeground(new Color(175, 238, 238));
+		lblNewLabel_2.setVisible(false);
+		panelInferior.add(lblNewLabel_2);
+
+		lblNewLabel_1 = new JLabel("2\u00BA: " + "second" + "   ");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel_1.setForeground(new Color(175, 238, 238));
+		lblNewLabel_1.setVisible(false);
+		panelInferior.add(lblNewLabel_1);
+
+		lblNewLabel = new JLabel("3\u00BA: " + "third" + "   ");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
+		lblNewLabel.setForeground(new Color(175, 238, 238));
+		lblNewLabel.setVisible(false);
+		panelInferior.add(lblNewLabel);
+
 		JButton btnNewButton = new JButton("Next Question");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnNewButton.setEnabled(false);
+		btnNewButton.setVisible(false);
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				cont++;
-				if(cont > questionList.size()) {
+				if (cont == questionList.size()) {
 					new ErrorControl("Questions are finished!!", "Warning");
-				}
-				question = questionList.get(cont).getQuestionText();
-				questionLabel.setText(question);
-				Timer timer = new Timer();
-				timer.scheduleAtFixedRate(new TimerTask() {
-					int i = ReadXMLDomParser.getConfiguration().getTimeout();
+					KadammPodium kadammPodium = new KadammPodium();
+					kadammPodium.main(null);
+					dispose();
+				} else {
+					answer1.setVisible(true);
+					answer2.setVisible(true);
+					answer3.setVisible(true);
+					answer4.setVisible(true);
+					timerJLabel.setVisible(true);
+					btnNewButton.setVisible(false);
+					lblNewLabel_2.setVisible(false);
+					lblNewLabel_1.setVisible(false);
+					lblNewLabel.setVisible(false);
+					question = questionList.get(cont).getQuestionText();
+					questionLabel.setText(question);
+					answerList = answerDao.getAllAnswersByQuestionId(questionList.get(cont).getQuestionId());
+					answer1.setText(answerList.get(0).getAnswerText());
+					answer2.setText(answerList.get(1).getAnswerText());
+					answer3.setText(answerList.get(2).getAnswerText());
+					answer4.setText(answerList.get(3).getAnswerText());
+					Timer timer = new Timer();
+					timer.scheduleAtFixedRate(new TimerTask() {
+						int i = ReadXMLDomParser.getConfiguration().getTimeout();
 
-					@Override
-					public void run() {
+						@Override
+						public void run() {
 
-						timerJLabel.setText(String.valueOf(i));
+							timerJLabel.setText(String.valueOf(i));
 
-						i--;
+							i--;
 
-						if (i < 0) {
-							timer.cancel();
-							btnNewButton.setEnabled(true);
+							if (i < 0) {
+								timer.cancel();
+								if (!answerList.get(0).isCorrect()) {
+									answer1.setVisible(false);
+								}
+								if (!answerList.get(1).isCorrect()) {
+									answer2.setVisible(false);
+								}
+								if (!answerList.get(2).isCorrect()) {
+									answer3.setVisible(false);
+								}
+								if (!answerList.get(3).isCorrect()) {
+									answer4.setVisible(false);
+								}
+								timerJLabel.setVisible(false);
+								lblNewLabel_2.setVisible(true);
+								lblNewLabel_1.setVisible(true);
+								lblNewLabel.setVisible(true);
+								btnNewButton.setVisible(true);
+							}
 						}
-					}
-				}, 0, 1000);
-				answerList = answerDao.getAllAnswersByQuestionId(questionList.get(cont).getQuestionId());
-				answer1.setText(answerList.get(0).getAnswerText());
-				answer2.setText(answerList.get(1).getAnswerText());
-				answer3.setText(answerList.get(2).getAnswerText());
-				answer4.setText(answerList.get(3).getAnswerText());
+					}, 0, 1000);
+				}
 			}
 		});
-	
+		panelInferior.add(btnNewButton);
+
 		timer.scheduleAtFixedRate(new TimerTask() {
 			int i = ReadXMLDomParser.getConfiguration().getTimeout();
 
@@ -159,33 +214,44 @@ public class KadammCompetition extends JFrame {
 
 				if (i < 0) {
 					timer.cancel();
-					btnNewButton.setEnabled(true);
+					if (!answerList.get(0).isCorrect()) {
+						answer1.setVisible(false);
+					}
+					if (!answerList.get(1).isCorrect()) {
+						answer2.setVisible(false);
+					}
+					if (!answerList.get(2).isCorrect()) {
+						answer3.setVisible(false);
+					}
+					if (!answerList.get(3).isCorrect()) {
+						answer4.setVisible(false);
+					}
+					timerJLabel.setVisible(false);
+					lblNewLabel_2.setVisible(true);
+					lblNewLabel_1.setVisible(true);
+					lblNewLabel.setVisible(true);
+					btnNewButton.setVisible(true);
 				}
 			}
 		}, 0, 1000);
-		
-		timerJLabel.setFont(new Font("Tahoma", Font.PLAIN, 22));
-		timerJLabel.setForeground(new Color(175, 238, 238));
-		panelInferior.add(timerJLabel);
-		panelInferior.add(btnNewButton);
 
 		JPanel panelCentral = new JPanel();
 		panelPrincipal.add(panelCentral, BorderLayout.CENTER);
 		panelCentral.setBackground(Color.decode("#374151"));
 		panelCentral.setLayout(new GridLayout(2, 2, 5, 5));
-		
+
 		answer1 = new JTextField();
 		answer1.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		answer1.setBackground(Color.RED);
 		panelCentral.add(answer1);
 		answer1.setColumns(10);
-		
+
 		answer2 = new JTextField();
 		answer2.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		answer2.setBackground(Color.GREEN);
 		panelCentral.add(answer2);
 		answer2.setColumns(10);
-		
+
 		answer3 = new JTextField();
 		answer3.setFont(new Font("Tahoma", Font.PLAIN, 22));
 		answer3.setBackground(Color.BLUE);

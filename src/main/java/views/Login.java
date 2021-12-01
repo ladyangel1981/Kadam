@@ -186,8 +186,7 @@ public class Login extends JFrame {
 					}
 					userID = user.getUserId();
 					System.out.println("ID: " + userID);
-					KadammManagement kadammManagemente = new KadammManagement();
-					kadammManagemente.main(userID);
+					KadammManagement.main(userID);
 					dispose();
 				} else {
 					new ErrorControl("Password incorrect", "Warning");
